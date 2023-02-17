@@ -1,0 +1,11 @@
+#npm
+npm-debug.log
+node_modules
+
+#personal
+.idea/
+
+#build
+test/
+example/
+karma.conf.js

@@ -1,0 +1,45 @@
+{
+  "name": "@gravity-ui/unipika",
+  "version": "0.0.1",
+  "description": "Common YT/YQL data formatting library",
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/gravity-ui/unipika"
+  },
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "files": [
+    "dist",
+    "lib",
+    "styles",
+    "vendor"
+  ],
+  "scripts": {
+    "build": "gulp",
+    "clean": "git checkout ./dist/ **/dist/",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build",
+    "test": "karma start --single-run"
+  },
+  "devDependencies": {
+    "babel-polyfill": "^6.2.0",
+    "browserify": "^13.0.1",
+    "chai": "^4.1.2",
+    "eslint": "^2.5.3",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-derequire": "^2.1.0",
+    "gulp-sass": "^3.1.0",
+    "karma": "*",
+    "karma-chai": "*",
+    "karma-cli": "*",
+    "karma-mocha": "*",
+    "karma-mocha-reporter": "*",
+    "karma-phantomjs-launcher": "*",
+    "mocha": "2.*",
+    "node-sass": "^4.14.1",
+    "phantomjs": "*",
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "readmeFilename": "README.md"
+}

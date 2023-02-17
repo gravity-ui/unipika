@@ -1,0 +1,11 @@
+{
+  "globals": {
+    "unipika": true,
+    "testUtils": true,
+    "chai": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "describe": true,
+    "it": true
+  }
+}

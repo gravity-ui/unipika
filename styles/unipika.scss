@@ -1,0 +1,147 @@
+@import "./themes.scss";
+
+@include unipika-default;
+
+.unipika {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+
+  color: var(--color-unipika-default);
+
+  .string,
+  .yql_string,
+  .yql_utf8 {
+    color: var(--color-unipika-string);
+  }
+
+  .key {
+    color: var(--color-unipika-key);
+  }
+
+  .special-key {
+    color: var(--color-unipika-key);
+    font-style: italic;
+  }
+
+  .null,
+  .yql_null {
+    color: var(--color-unipika-null);
+    font-style: italic;
+  }
+
+  .number,
+  .int64,
+  .yql_int8,
+  .yql_int16,
+  .yql_int32,
+  .yql_int64 {
+    color: var(--color-unipika-int);
+  }
+
+  .uint64,
+  .yql_uint8,
+  .yql_uint16,
+  .yql_uint32,
+  .yql_uint64 {
+    color: var(--color-unipika-uint);
+  }
+
+  .double,
+  .yql_double,
+  .yql_float,
+  .yql_decimal {
+    color: var(--color-unipika-float);
+  }
+
+  .boolean,
+  .yql_bool,
+  .yql_enum {
+    color: var(--color-unipika-bool);
+  }
+
+  .yql_date,
+  .yql_datetime,
+  .yql_timestamp,
+  .yql_tzdate,
+  .yql_tzdatetime,
+  .yql_tztimestamp {
+    color: var(--color-unipika-date);
+  }
+
+  .yql_interval {
+    color: var(--color-unipika-interval);
+  }
+
+  .yql_tagged {
+    &.tag_image {
+      vertical-align: top;
+    }
+  }
+
+  .escape {
+    color: var(--color-unipika-escape-text);
+    background-color: var(--color-unipika-escape-back);
+  }
+
+  .quote {
+    color: var(--color-unipika-default);
+  }
+
+  .binary,
+  .incomplete {
+    background-color: var(--color-unipika-binary-back);
+  }
+
+  .binary::after,
+  .incomplete::after {
+    padding-left: 0.8em;
+
+    color: var(--color-unipika-binary-after);
+  }
+
+  .incomplete::after {
+    content: '[truncated]';
+    white-space: nowrap;
+  }
+
+  .binary::after {
+    content: '[binary]';
+    white-space: nowrap;
+  }
+
+  .incomplete.binary::after {
+    content: '[truncated][binary]';
+    white-space: nowrap;
+  }
+
+  .yql_uuid {
+    color: var(--color-unipika-uuid);
+
+    &.binary,
+    &.incomplete {
+      background: none;
+      &::after {
+        content: '';
+        display: none;
+      }
+    }
+  }
+
+  // Tagged type styles
+  .tag_url {
+    text-decoration: none;
+    color: var(--color-unipika-tag-url);
+    &:hover {
+      color: var(--color-unipika-tag-url-hover);
+    }
+  }
+}
+
+.unipika-wrapper {
+  &_inline_yes {
+    .unipika {
+      display: inline-block;
+    }
+  }
+}
