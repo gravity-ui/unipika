@@ -16,6 +16,7 @@
   ],
   "scripts": {
     "build": "gulp",
+    "build-storybook": "npm run build && mkdir storybook-static && cp -r dist example storybook-static",
     "clean": "git checkout ./dist/ **/dist/",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
