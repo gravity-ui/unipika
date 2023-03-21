@@ -20,8 +20,7 @@
     "clean": "git checkout ./dist/ **/dist/",
     "lint": "eslint .",
     "prepublishOnly": "npm run build",
-    "test": "",
-    "test:karma": "karma start --single-run",
+    "test": "jest",
     "typecheck": ""
   },
   "devDependencies": {
