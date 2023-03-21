@@ -11,7 +11,6 @@ const DIST = './dist/';
 const LIB = './lib/';
 const STYLES = './styles/';
 const EXAMPLE_DIST = './example/dist/';
-const TEST_DIST = './test/dist/';
 
 gulp.task('bundle-scripts', () => {
     return browserify(LIB + 'unipika.js')
@@ -45,15 +44,7 @@ gulp.task('bundle-example-styles', () => {
         .pipe(gulp.dest(EXAMPLE_DIST));
 });
 
-gulp.task('bundle-test-environment', () => {
-    return browserify('./test/environment.js')
-        .bundle()
-        .pipe(source('environment-bundle.js'))
-        .pipe(gulp.dest(TEST_DIST));
-});
-
 gulp.task('dist', gulp.series('bundle-scripts', 'bundle-styles'));
 gulp.task('example', gulp.series('bundle-example', 'bundle-example-styles'));
-gulp.task('test', gulp.series('bundle-test-environment'));
 
-gulp.task('default', gulp.series('dist', 'example', 'test'));
+gulp.task('default', gulp.series('dist', 'example'));
