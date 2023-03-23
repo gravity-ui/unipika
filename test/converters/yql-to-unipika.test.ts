@@ -656,5 +656,62 @@ describe("converters", function () {
       };
       expect(yqlToYson([data, dataType], { maxListSize: 2 })).toEqual(result);
     });
+
+    test("Regular strings get truncated", function () {
+      var text = "We're no strangers to love\nYou know the rules and so do I\nA full commitment's what I'm thinking of\nYou wouldn't get this from any other guy";
+      var maxStringSize = 25;
+
+      var dataType = ["DataType", "String"];
+      var data = text;
+
+      var actual = yqlToYson([data, dataType], {maxStringSize: maxStringSize});
+
+      expect(actual.$value).toEqual("We're no strangers to lov");
+      expect(actual.$value.length).toEqual(25);
+    });
+
+    describe("Binary strings get truncated", function () {
+      test("with no tail bytes in base64", function () {
+        var text = "We're no strangers to love\nYou know the rules and so do I\nA full commitment's what I'm thinking of\nYou wouldn't get this from any other guy";
+        var base64 = btoa(text);
+        var maxStringSize = 24;
+  
+        var dataType = ["DataType", "String"];
+        var data = [base64];
+  
+        var yson = yqlToYson([data, dataType], {maxStringSize: maxStringSize});
+  
+        expect(atob(yson.$value)).toEqual("We're no strangers to lo");
+        expect(atob(yson.$value).length).toEqual(24);
+      });
+
+      test("with 1 tail byte in base64", function () {
+        var text = "We're no strangers to love\nYou know the rules and so do I\nA full commitment's what I'm thinking of\nYou wouldn't get this from any other guy";
+        var base64 = btoa(text);
+        var maxStringSize = 25;
+  
+        var dataType = ["DataType", "String"];
+        var data = [base64];
+  
+        var yson = yqlToYson([data, dataType], {maxStringSize: maxStringSize});
+  
+        expect(atob(yson.$value)).toEqual("We're no strangers to lov");
+        expect(atob(yson.$value).length).toEqual(25);
+      });
+
+      test("with 2 tail bytes in base64", function () {
+        var text = "We're no strangers to love\nYou know the rules and so do I\nA full commitment's what I'm thinking of\nYou wouldn't get this from any other guy";
+        var base64 = btoa(text);
+        var maxStringSize = 26;
+  
+        var dataType = ["DataType", "String"];
+        var data = [base64];
+  
+        var yson = yqlToYson([data, dataType], {maxStringSize: maxStringSize});
+  
+        expect(atob(yson.$value)).toEqual("We're no strangers to love");
+        expect(atob(yson.$value).length).toEqual(26);
+      });
+    });
   });
 });
