@@ -579,6 +579,113 @@ describe("converters", function () {
       expect(yqlToYson([data, dataType])).toEqual(result);
     });
 
+    test("TaggedType: imageurl with invalid data", function () {
+      var dataType = [
+        "TaggedType",
+        "imageurl",
+        [
+          "StructType",
+          [
+            ["maxHeight", ["DataType", "Int32"]],
+            ["maxWidth", ["DataType", "Int32"]],
+            ["src", ["OptionalType", ["DataType", "Yson"]]],
+          ],
+        ],
+      ];
+      var data = [
+        "200",
+        "200",
+        [
+          {
+            $value:
+              "http://foo.com",
+            $type: "string",
+          },
+        ],
+      ];
+      var result = {
+        $type: "yql.struct",
+        $value: [
+          [
+            {
+              $type: "yql.string",
+              $value: "maxHeight",
+              $key: true,
+            },
+            {
+              $type: "yql.int32",
+              $value: "200",
+            },
+          ],
+          [
+            {
+              $type: "yql.string",
+              $value: "maxWidth",
+              $key: true,
+            },
+            {
+              $type: "yql.int32",
+              $value: "200",
+            },
+          ],
+          [
+            {
+              $type: "yql.string",
+              $value: "src",
+              $key: true,
+            },
+            {
+              $type: "yql.yson",
+              $value: {
+                $value: "http://foo.com",
+                $type: "string",
+              },
+              $optional: 1,
+            },
+          ],
+        ],
+      };
+      expect(yqlToYson([data, dataType])).toEqual(result);
+    });
+
+    test("TaggedType: url with invalid data", function () {
+      var dataType = [
+        "TaggedType",
+        "url",
+        ["StructType", [["href", ["OptionalType", ["DataType", "Yson"]]]]],
+      ];
+      var data = [
+        [
+          {
+            $value: "http://foo.com",
+            $type: "string",
+          },
+        ],
+      ];
+      var result = {
+        $type: "yql.struct",
+        $value: [
+          [
+            {
+              $type: "yql.string",
+              $value: "href",
+              $key: true,
+            },
+            {
+              $type: "yql.yson",
+              $value: {
+                $value: "http://foo.com",
+                $type: "string",
+              },
+              $optional: 1,
+            },
+          ],
+        ],
+      };
+
+      expect(yqlToYson([data, dataType])).toEqual(result);
+    });
+
     test("Struct: omitStructNull", function () {
       var dataType = [
         "StructType",
