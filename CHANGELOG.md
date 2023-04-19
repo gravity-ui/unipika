@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/gravity-ui/unipika/compare/v1.0.1...v1.0.2) (2023-04-19)
+
+
+### Bug Fixes
+
+* tagged type with invalid structure ([e28bdad](https://github.com/gravity-ui/unipika/commit/e28bdad6e5c50689c993d45eeaa914dda61f6d6c))
+
 ## [1.0.1](https://github.com/gravity-ui/unipika/compare/v1.0.0...v1.0.1) (2023-03-23)
 
 
