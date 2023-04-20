@@ -536,7 +536,7 @@ describe("converters", function () {
         expect(yqlToYson([data, dataType])).toEqual(result);
       });
 
-      test("Struct tagged as videourl", function () {
+      test("Struct tagged as videourl (with domain as regexp in validateDomain setting)", function () {
         var dataType = [
           "TaggedType",
           "videourl",
@@ -558,7 +558,58 @@ describe("converters", function () {
               src: "http://foo.com",
               width: "1200",
             },
-          },
+          }
+        };
+
+        var validateDomain = (domain) => {
+          const url = new URL(domain);
+          const host = url ? url.host : '';
+          var re = /\S*foo\S*/
+          return host.match(re)
+        }
+
+        expect(yqlToYson([data, dataType], {validateDomain})).toEqual(result);
+      });
+
+      test("Struct tagged as videourl (without domain in validateDomain setting)", function () {
+        var dataType = [
+          "TaggedType",
+          "videourl",
+          [
+            "StructType",
+            [
+              ["src", ["DataType", "String"]],
+              ["width", ["DataType", "Int32"]],
+            ],
+          ],
+        ];
+        var data = ["http://foo.com", "1200"];
+        var result = {
+          $type: "yql.struct",
+          $value: [
+            [
+              {
+                $type: "yql.string",
+                $value: "src",
+                $key: true,
+              },
+              {
+                $type: "yql.string",
+                $value: "http://foo.com",
+              },
+            ],
+            [
+              {
+                $type: "yql.string",
+                $value: "width",
+                $key: true,
+              },
+              {
+                $type: "yql.int32",
+                $value: "1200",
+              },
+            ]
+          ],
         };
 
         expect(yqlToYson([data, dataType])).toEqual(result);
