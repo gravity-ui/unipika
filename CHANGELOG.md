@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/gravity-ui/unipika/compare/v1.0.2...v2.0.0) (2023-04-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* add setting validateDomain.\
+
+### Features
+
+* add setting validateDomain.\ ([72c7fc9](https://github.com/gravity-ui/unipika/commit/72c7fc98ce2dcf890cc49f4b7bf5d45cd70eb494))
+
 ## [1.0.2](https://github.com/gravity-ui/unipika/compare/v1.0.1...v1.0.2) (2023-04-19)
 
 
