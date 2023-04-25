@@ -536,7 +536,7 @@ describe("converters", function () {
         expect(yqlToYson([data, dataType])).toEqual(result);
       });
 
-      test("Struct tagged as videourl (with domain as regexp in validateDomain setting)", function () {
+      test("Struct tagged as videourl (with domain as regexp in validateSrcUrl setting)", function () {
         var dataType = [
           "TaggedType",
           "videourl",
@@ -561,17 +561,17 @@ describe("converters", function () {
           }
         };
 
-        var validateDomain = (domain) => {
+        var validateSrcUrl = (domain) => {
           const url = new URL(domain);
           const host = url ? url.host : '';
           var re = /\S*foo\S*/
           return host.match(re)
         }
 
-        expect(yqlToYson([data, dataType], {validateDomain})).toEqual(result);
+        expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
       });
 
-      test("Struct tagged as videourl (without domain in validateDomain setting)", function () {
+      test("Struct tagged as videourl (without domain in validateSrcUrl setting)", function () {
         var dataType = [
           "TaggedType",
           "videourl",
