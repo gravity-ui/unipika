@@ -28,7 +28,7 @@ It is assumed that types can't be mixed in arbitrary way, that is, for example, 
 
 |Name|Type|Default value|Description|
 |---|---|---|---|
-|validateDomain|`(domain: string) => boolean`|`() => false`|Function, which accepts source url for `TaggedType` types and returns whether it is allowed to be downloaded. If settings in not defined, `TaggedType` types (images, audio, video) will be formatted as `StructType`|
+|validateSrcUrl|`(domain: string) => boolean`|`() => false`|Function, which accepts source url for `TaggedType` types and returns whether it is allowed to be downloaded. If settings in not defined, `TaggedType` types (images, audio, video) will be formatted as `StructType`|
 |format|String|`'json'`|`[YSON-specific]` Affects displaying YSON types. Serialization to text `yson` or `json` is supported. These ways of representation are described in YT documentation.|
 |decodeUTF8|Boolean|`true`|`[YSON-Converter][YSON-specific]` Setting is passed to the converter (YSON to Unipikа). Indicated whether to try decode the data. The data received from YT with the setting { encode_utf8 = false } should not be decoded (also is means that all strings are valid UTF-8 sequences, that is, they are not binary). By default the data from YT is received with the setting { encode_utf8 = true } and should be decoded; strings that cannot be decoded are marked as binary.|
 |showDecoded|Boolean|`true`|`[NCP][YSON-specific]` Indicates whether the decoded data should be displayed or the data in the form in which it is received from YT.|
