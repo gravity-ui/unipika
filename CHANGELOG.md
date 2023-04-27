@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/gravity-ui/unipika/compare/v2.0.0...v2.0.1) (2023-04-27)
+
+
+### Bug Fixes
+
+* add src url validation if value is not StructType ([e499304](https://github.com/gravity-ui/unipika/commit/e49930442c800729cc13c09e8bf68d77a4d7a859))
+
 ## [2.0.0](https://github.com/gravity-ui/unipika/compare/v1.0.2...v2.0.0) (2023-04-25)
 
 
