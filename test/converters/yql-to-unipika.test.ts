@@ -447,20 +447,6 @@ describe("converters", function () {
       expect(yqlToYson([data, dataType])).toEqual(result);
     });
 
-    test("TaggedType", function () {
-      var dataType = ["TaggedType", "image/jpeg", ["DataType", "String"]];
-      var data = "image";
-      var result = {
-        $type: "yql.tagged",
-        $tag: "image/jpeg",
-        $value: {
-          $type: "yql.string",
-          $value: "image",
-        },
-      };
-      expect(yqlToYson([data, dataType])).toEqual(result);
-    });
-
     describe("TaggedType", function () {
       test("Image/jpeg", function () {
         var dataType = ["TaggedType", "image/jpeg", ["DataType", "String"]];
@@ -472,6 +458,19 @@ describe("converters", function () {
             $type: "yql.string",
             $value: "image",
           },
+        };
+        var validateSrcUrl = (value: string) => {
+          return value === 'image'
+        }
+        expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
+      });
+
+      test("Image/jpeg with invalid src", function () {
+        var dataType = ["TaggedType", "image/jpeg", ["DataType", "String"]];
+        var data = "image";
+        var result = {
+          $type: "yql.string",
+          $value: "image",
         };
         expect(yqlToYson([data, dataType])).toEqual(result);
       });
