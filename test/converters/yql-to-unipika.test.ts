@@ -459,14 +459,28 @@ describe("converters", function () {
             $value: "image",
           },
         };
+
+        expect(yqlToYson([data, dataType])).toEqual(result);
+      });
+      test("Imageurl", function () {
+        var dataType = ["TaggedType", "imageurl", ["DataType", "String"]];
+        var data = "image";
+        var result = {
+          $type: "yql.tagged",
+          $tag: "imageurl",
+          $value: {
+            $type: "yql.string",
+            $value: "image",
+          },
+        };
         var validateSrcUrl = (value: string) => {
           return value === 'image'
         }
         expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
       });
 
-      test("Image/jpeg with invalid src", function () {
-        var dataType = ["TaggedType", "image/jpeg", ["DataType", "String"]];
+      test("Imageurl with invalid src", function () {
+        var dataType = ["TaggedType", "imageurl", ["DataType", "String"]];
         var data = "image";
         var result = {
           $type: "yql.string",
