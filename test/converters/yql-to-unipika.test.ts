@@ -448,322 +448,378 @@ describe("converters", function () {
     });
 
     describe("TaggedType", function () {
-      test("Image/jpeg", function () {
-        var dataType = ["TaggedType", "image/jpeg", ["DataType", "String"]];
-        var data = "image";
-        var result = {
-          $type: "yql.tagged",
-          $tag: "image/jpeg",
-          $value: {
-            $type: "yql.string",
-            $value: "image",
-          },
-        };
-
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-      test("Imageurl", function () {
-        var dataType = ["TaggedType", "imageurl", ["DataType", "String"]];
-        var data = "image";
-        var result = {
-          $type: "yql.tagged",
-          $tag: "imageurl",
-          $value: {
-            $type: "yql.string",
-            $value: "image",
-          },
-        };
-        var validateSrcUrl = (value: string) => {
-          return value === 'image'
-        }
-        expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
-      });
-
-      test("Imageurl with invalid src", function () {
-        var dataType = ["TaggedType", "imageurl", ["DataType", "String"]];
-        var data = "image";
-        var result = {
-          $type: "yql.string",
-          $value: "image",
-        };
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-
-      test("Named url", function () {
-        var dataType = [
-          "TaggedType",
-          "url",
-          [
-            "StructType",
-            [
-              ["href", ["DataType", "String"]],
-              ["text", ["DataType", "String"]],
-              ["title", ["DataType", "String"]],
-            ],
-          ],
-        ];
-        var data = ["http://foo.com", "Foo", "Foo title"];
-        var result = {
-          $type: "yql.tagged",
-          $tag: "url",
-          $value: {
-            $type: "tag_value",
+      describe("With inline src", function () {
+        test("Image/jpeg", function () {
+          var dataType = ["TaggedType", "image/jpeg", ["DataType", "String"]];
+          var data = "image";
+          var result = {
+            $type: "yql.tagged",
+            $tag: "image/jpeg",
             $value: {
-              href: "http://foo.com",
-              text: "Foo",
-              title: "Foo title",
+              $type: "yql.string",
+              $value: "image",
             },
-          },
-        };
+          };
 
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-
-      test("Named url without href", function () {
-        var dataType = [
-          "TaggedType",
-          "url",
-          [
-            "StructType",
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+        test("Struct tagged as Image/jpeg", function () {
+          var dataType = [
+            "TaggedType",
+            "image/jpeg",
             [
-              ["text", ["DataType", "String"]],
-              ["title", ["DataType", "String"]],
+              "StructType",
+              [
+                ["src", ["DataType", "String"]],
+                ["width", ["DataType", "Int32"]],
+              ],
             ],
-          ],
-        ];
-        var data = ["Foo", "Foo title"];
-        var result = {
-          $type: "yql.struct",
-          $value: [
-            [
-              { $type: "yql.string", $value: "text", $key: true },
-              { $type: "yql.string", $value: "Foo" },
-            ],
-            [
-              { $type: "yql.string", $value: "title", $key: true },
-              { $type: "yql.string", $value: "Foo title" },
-            ],
-          ],
-        };
-
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-
-      test("Struct tagged as videourl (with domain as regexp in validateSrcUrl setting)", function () {
-        var dataType = [
-          "TaggedType",
-          "videourl",
-          [
-            "StructType",
-            [
-              ["src", ["DataType", "String"]],
-              ["width", ["DataType", "Int32"]],
-            ],
-          ],
-        ];
-        var data = ["http://foo.com", "1200"];
-        var result = {
-          $type: "yql.tagged",
-          $tag: "videourl",
-          $value: {
-            $type: "tag_value",
+          ];
+          var data = ["inlinesrc", "1200"];
+          var result = {
+            $type: "yql.tagged",
+            $tag: "image/jpeg",
             $value: {
-              src: "http://foo.com",
-              width: "1200",
-            },
+              $type: "tag_value",
+              $value: {
+                src: "inlinesrc",
+                width: "1200",
+              },
+            }
+          };
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });        
+        test("Struct tagged with invalid data as Image/jpeg", function () {
+          var dataType = [
+            "TaggedType",
+            "image/jpeg",
+            [
+              "StructType",
+              [
+                ["width", ["DataType", "Int32"]],
+              ],
+            ],
+          ];
+          var data = ["1200"];
+          var result = {
+            $type: "yql.struct",
+            $value: [
+                [
+                  {
+                    $type: "yql.string",
+                    $value: "width",
+                    $key: true,
+                  },
+                  {
+                    $type: "yql.int32",
+                    $value: "1200",
+                  }
+                ]
+              ]
+          };
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });   
+      })
+      describe("With url src", function () {
+        test("Struct tagged as videourl (with domain as regexp in validateSrcUrl setting)", function () {
+          var dataType = [
+            "TaggedType",
+            "videourl",
+            [
+              "StructType",
+              [
+                ["src", ["DataType", "String"]],
+                ["width", ["DataType", "Int32"]],
+              ],
+            ],
+          ];
+          var data = ["http://foo.com", "1200"];
+          var result = {
+            $type: "yql.tagged",
+            $tag: "videourl",
+            $value: {
+              $type: "tag_value",
+              $value: {
+                src: "http://foo.com",
+                width: "1200",
+              },
+            }
+          };
+  
+          var validateSrcUrl = (domain) => {
+            const url = new URL(domain);
+            const host = url ? url.host : '';
+            var re = /\S*foo\S*/
+            return host.match(re)
           }
-        };
-
-        var validateSrcUrl = (domain) => {
-          const url = new URL(domain);
-          const host = url ? url.host : '';
-          var re = /\S*foo\S*/
-          return host.match(re)
-        }
-
-        expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
-      });
-
-      test("Struct tagged as videourl (without domain in validateSrcUrl setting)", function () {
-        var dataType = [
-          "TaggedType",
-          "videourl",
-          [
-            "StructType",
+  
+          expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
+        });
+  
+        test("Struct tagged as videourl (without domain in validateSrcUrl setting)", function () {
+          var dataType = [
+            "TaggedType",
+            "videourl",
             [
-              ["src", ["DataType", "String"]],
-              ["width", ["DataType", "Int32"]],
+              "StructType",
+              [
+                ["src", ["DataType", "String"]],
+                ["width", ["DataType", "Int32"]],
+              ],
             ],
-          ],
-        ];
-        var data = ["http://foo.com", "1200"];
-        var result = {
-          $type: "yql.struct",
-          $value: [
+          ];
+          var data = ["http://foo.com", "1200"];
+          var result = {
+            $type: "yql.struct",
+            $value: [
+              [
+                {
+                  $type: "yql.string",
+                  $value: "src",
+                  $key: true,
+                },
+                {
+                  $type: "yql.string",
+                  $value: "http://foo.com",
+                },
+              ],
+              [
+                {
+                  $type: "yql.string",
+                  $value: "width",
+                  $key: true,
+                },
+                {
+                  $type: "yql.int32",
+                  $value: "1200",
+                },
+              ]
+            ],
+          };
+  
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+        test("Imageurl with valid src", function () {
+          var dataType = ["TaggedType", "imageurl", ["DataType", "String"]];
+          var data = "image";
+          var result = {
+            $type: "yql.tagged",
+            $tag: "imageurl",
+            $value: {
+              $type: "yql.string",
+              $value: "image",
+            },
+          };
+          var validateSrcUrl = (value: string) => {
+            return value === 'image'
+          }
+          expect(yqlToYson([data, dataType], {validateSrcUrl})).toEqual(result);
+        });
+        test("Imageurl with invalid src", function () {
+          var dataType = ["TaggedType", "imageurl", ["DataType", "String"]];
+          var data = "image";
+          var result = {
+            $type: "yql.string",
+            $value: "image",
+          };
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+        test("Struct tagged as videourl without src", function () {
+          var dataType = [
+            "TaggedType",
+            "videourl",
+            [
+              "StructType",
+              [
+                ["text", ["DataType", "String"]],
+                ["title", ["DataType", "String"]],
+              ],
+            ],
+          ];
+          var data = ["Foo", "Foo title"];
+          var result = {
+            $type: "yql.struct",
+            $value: [
+              [
+                { $type: "yql.string", $value: "text", $key: true },
+                { $type: "yql.string", $value: "Foo" },
+              ],
+              [
+                { $type: "yql.string", $value: "title", $key: true },
+                { $type: "yql.string", $value: "Foo title" },
+              ],
+            ],
+          };
+  
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+  
+        test("Struct tagged as imageurl with invalid data (src should not be optional)", function () {
+          var dataType = [
+            "TaggedType",
+            "imageurl",
+            [
+              "StructType",
+              [
+                ["maxHeight", ["DataType", "Int32"]],
+                ["maxWidth", ["DataType", "Int32"]],
+                ["src", ["OptionalType", ["DataType", "String"]]],
+              ],
+            ],
+          ];
+          var data = [
+            "200",
+            "200",
             [
               {
-                $type: "yql.string",
-                $value: "src",
-                $key: true,
-              },
-              {
-                $type: "yql.string",
                 $value: "http://foo.com",
+                $type: "string",
               },
             ],
-            [
-              {
-                $type: "yql.string",
-                $value: "width",
-                $key: true,
-              },
-              {
-                $type: "yql.int32",
-                $value: "1200",
-              },
-            ]
-          ],
-        };
-
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-
-      test("Struct tagged as videourl without src", function () {
-        var dataType = [
-          "TaggedType",
-          "videourl",
-          [
-            "StructType",
-            [
-              ["text", ["DataType", "String"]],
-              ["title", ["DataType", "String"]],
-            ],
-          ],
-        ];
-        var data = ["Foo", "Foo title"];
-        var result = {
-          $type: "yql.struct",
-          $value: [
-            [
-              { $type: "yql.string", $value: "text", $key: true },
-              { $type: "yql.string", $value: "Foo" },
-            ],
-            [
-              { $type: "yql.string", $value: "title", $key: true },
-              { $type: "yql.string", $value: "Foo title" },
-            ],
-          ],
-        };
-
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-
-      test("Imageurl with invalid data", function () {
-        var dataType = [
-          "TaggedType",
-          "imageurl",
-          [
-            "StructType",
-            [
-              ["maxHeight", ["DataType", "Int32"]],
-              ["maxWidth", ["DataType", "Int32"]],
-              ["src", ["OptionalType", ["DataType", "Yson"]]],
-            ],
-          ],
-        ];
-        var data = [
-          "200",
-          "200",
-          [
-            {
-              $value: "http://foo.com",
-              $type: "string",
-            },
-          ],
-        ];
-        var result = {
-          $type: "yql.struct",
-          $value: [
-            [
-              {
-                $type: "yql.string",
-                $value: "maxHeight",
-                $key: true,
-              },
-              {
-                $type: "yql.int32",
-                $value: "200",
-              },
-            ],
-            [
-              {
-                $type: "yql.string",
-                $value: "maxWidth",
-                $key: true,
-              },
-              {
-                $type: "yql.int32",
-                $value: "200",
-              },
-            ],
-            [
-              {
-                $type: "yql.string",
-                $value: "src",
-                $key: true,
-              },
-              {
-                $type: "yql.yson",
-                $value: {
-                  $value: "http://foo.com",
-                  $type: "string",
+          ];
+          var result = {
+            $type: "yql.struct",
+            $value: [
+              [
+                {
+                  $type: "yql.string",
+                  $value: "maxHeight",
+                  $key: true,
                 },
-                $optional: 1,
-              },
+                {
+                  $type: "yql.int32",
+                  $value: "200",
+                },
+              ],
+              [
+                {
+                  $type: "yql.string",
+                  $value: "maxWidth",
+                  $key: true,
+                },
+                {
+                  $type: "yql.int32",
+                  $value: "200",
+                },
+              ],
+              [
+                {
+                  $type: "yql.string",
+                  $value: "src",
+                  $key: true,
+                },
+                {
+                  $type: "yql.string",
+                  $value: {
+                    $value: "http://foo.com",
+                    $type: "string",
+                  },
+                  $optional: 1,
+                },
+              ],
             ],
-          ],
-        };
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-
-      test("Url with invalid data", function () {
-        var dataType = [
-          "TaggedType",
-          "url",
-          ["StructType", [["href", ["OptionalType", ["DataType", "Yson"]]]]],
-        ];
-        var data = [
-          [
-            {
-              $value: "http://foo.com",
-              $type: "string",
+          };
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+      })
+      describe("Link", function() {
+        test("Named url", function () {
+          var dataType = [
+            "TaggedType",
+            "url",
+            [
+              "StructType",
+              [
+                ["href", ["DataType", "String"]],
+                ["text", ["DataType", "String"]],
+                ["title", ["DataType", "String"]],
+              ],
+            ],
+          ];
+          var data = ["http://foo.com", "Foo", "Foo title"];
+          var result = {
+            $type: "yql.tagged",
+            $tag: "url",
+            $value: {
+              $type: "tag_value",
+              $value: {
+                href: "http://foo.com",
+                text: "Foo",
+                title: "Foo title",
+              },
             },
-          ],
-        ];
-        var result = {
-          $type: "yql.struct",
-          $value: [
+          };
+  
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+        test("Named url without href", function () {
+          var dataType = [
+            "TaggedType",
+            "url",
+            [
+              "StructType",
+              [
+                ["text", ["DataType", "String"]],
+                ["title", ["DataType", "String"]],
+              ],
+            ],
+          ];
+          var data = ["Foo", "Foo title"];
+          var result = {
+            $type: "yql.struct",
+            $value: [
+              [
+                { $type: "yql.string", $value: "text", $key: true },
+                { $type: "yql.string", $value: "Foo" },
+              ],
+              [
+                { $type: "yql.string", $value: "title", $key: true },
+                { $type: "yql.string", $value: "Foo title" },
+              ],
+            ],
+          };
+  
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+        test("Url with invalid data", function () {
+          var dataType = [
+            "TaggedType",
+            "url",
+            ["StructType", [["href", ["OptionalType", ["DataType", "Yson"]]]]],
+          ];
+          var data = [
             [
               {
-                $type: "yql.string",
-                $value: "href",
-                $key: true,
-              },
-              {
-                $type: "yql.yson",
-                $value: {
-                  $value: "http://foo.com",
-                  $type: "string",
-                },
-                $optional: 1,
+                $value: "http://foo.com",
+                $type: "string",
               },
             ],
-          ],
-        };
-
-        expect(yqlToYson([data, dataType])).toEqual(result);
-      });
-    })
+          ];
+          var result = {
+            $type: "yql.struct",
+            $value: [
+              [
+                {
+                  $type: "yql.string",
+                  $value: "href",
+                  $key: true,
+                },
+                {
+                  $type: "yql.yson",
+                  $value: {
+                    $value: "http://foo.com",
+                    $type: "string",
+                  },
+                  $optional: 1,
+                },
+              ],
+            ],
+          };
+  
+          expect(yqlToYson([data, dataType])).toEqual(result);
+        });
+      })
+      })
 
     test("Struct: omitStructNull", function () {
       var dataType = [
