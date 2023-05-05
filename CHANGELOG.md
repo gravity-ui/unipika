@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/gravity-ui/unipika/compare/v2.0.1...v2.0.2) (2023-05-05)
+
+
+### Bug Fixes
+
+* should validate only AsTagged with url source ([06cdb96](https://github.com/gravity-ui/unipika/commit/06cdb9642b795d912537441aeccd721f8df94d1f))
+
 ## [2.0.1](https://github.com/gravity-ui/unipika/compare/v2.0.0...v2.0.1) (2023-04-27)
 
 
