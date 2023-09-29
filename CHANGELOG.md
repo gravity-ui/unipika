@@ -1,3 +1,7 @@
+**BREAKING CHANGES:**
+
+- [unipika.utils.format.hidereferrer](https://github.com/gravity-ui/unipika/blob/a35528d190e6b8e2a57bfba97d482083fc0c1647/lib/utils/format.js#L92-L94) is removed. As result wrapping of urls by 'https://h.yandex-team.ru' is removed, and if you need it you have to provide corresponding value for `settings.normalizeUrl`-option.
+
 # Changelog
 
 ## [2.0.2](https://github.com/gravity-ui/unipika/compare/v2.0.1...v2.0.2) (2023-05-05)
