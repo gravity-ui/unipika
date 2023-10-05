@@ -1,8 +1,16 @@
-**BREAKING CHANGES:**
+# Changelog
+
+## [3.0.0](https://github.com/gravity-ui/unipika/compare/v2.0.2...v3.0.0) (2023-10-05)
+
+
+### ⚠ BREAKING CHANGES
 
 - [unipika.utils.format.hidereferrer](https://github.com/gravity-ui/unipika/blob/a35528d190e6b8e2a57bfba97d482083fc0c1647/lib/utils/format.js#L92-L94) is removed. As result wrapping of urls by 'https://h.yandex-team.ru' is removed, and if you need it you have to provide corresponding value for `settings.normalizeUrl`-option.
 
-# Changelog
+### Features
+
+* add settings.normalizeUrl ([eef8e96](https://github.com/gravity-ui/unipika/commit/eef8e9667fd077d2f63e1572368162991fa9b9b4))
+* **converters:** add support for PgType ([fa7316d](https://github.com/gravity-ui/unipika/commit/fa7316d365be939f834f77088d9c67f4f58cac02))
 
 ## [2.0.2](https://github.com/gravity-ui/unipika/compare/v2.0.1...v2.0.2) (2023-05-05)
 
