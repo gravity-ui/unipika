@@ -28,6 +28,13 @@ describe("converters", function () {
         $value: "Some value",
       });
     });
+    test("PG int4", function () {
+      var result = yqlToYson([4, ["PgType", "int4"]]);
+      expect(result).toEqual({
+        $type: "yql.pg.int4",
+        $value: 4,
+      });
+    });
 
     test("Binary string", function () {
       var result = yqlToYson([["Some value"], ["DataType", "String"]]);
@@ -62,9 +69,10 @@ describe("converters", function () {
           ["a", ["DataType", "Int64"]],
           ["b", ["DataType", "Double"]],
           ["c", ["DataType", "String"]],
+          ["d", ["PgType", "string"]],
         ],
       ];
-      var data = ["2", "3.1", "x"];
+      var data = ["2", "3.1", "x", "pgvalue"];
       var result = {
         $type: "yql.struct",
         $value: [
@@ -101,6 +109,17 @@ describe("converters", function () {
               $value: "x",
             },
           ],
+          [
+            {
+              $type: "yql.string",
+              $key: true,
+              $value: "d",
+            },
+            {
+              $type: "yql.pg.string",
+              $value: "pgvalue",
+            },
+          ],
         ],
       };
       expect(yqlToYson([data, dataType])).toEqual(result);
@@ -113,9 +132,10 @@ describe("converters", function () {
           ["DataType", "Int64"],
           ["DataType", "String"],
           ["DataType", "Double"],
+          ["PgType", "int4"],
         ],
       ];
-      var data = ["1", "foo", "4.321"];
+      var data = ["1", "foo", "4.321", 4];
       var result = {
         $type: "yql.tuple",
         $value: [
@@ -130,6 +150,10 @@ describe("converters", function () {
           {
             $type: "yql.double",
             $value: "4.321",
+          },
+          {
+            $type: "yql.pg.int4",
+            $value: 4,
           },
         ],
       };
@@ -157,6 +181,28 @@ describe("converters", function () {
           },
           {
             $type: "yql.string",
+            $value: "1",
+          },
+        ],
+      };
+      expect(yqlToYson([data, dataType])).toEqual(result);
+    });
+    test("PG List", function () {
+      var dataType = ["ListType", ["PgType", "string"]];
+      var data = ["a", "при\nем", "1"];
+      var result = {
+        $type: "yql.list",
+        $value: [
+          {
+            $type: "yql.pg.string",
+            $value: "a",
+          },
+          {
+            $type: "yql.pg.string",
+            $value: "при\nем",
+          },
+          {
+            $type: "yql.pg.string",
             $value: "1",
           },
         ],
