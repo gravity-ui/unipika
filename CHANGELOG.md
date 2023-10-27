@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.1.0](https://github.com/gravity-ui/unipika/compare/v3.0.0...v3.1.0) (2023-10-27)
+
+
+### Features
+
+* **format:** add html title for incomplete strings ([c69382c](https://github.com/gravity-ui/unipika/commit/c69382c4ecb2f6d42417e758064dc826a85faded))
+
+
+### Bug Fixes
+
+* tests ([da85816](https://github.com/gravity-ui/unipika/commit/da85816869602746f09a2a3e33ed9ef9570a376c))
+
 ## [3.0.0](https://github.com/gravity-ui/unipika/compare/v2.0.2...v3.0.0) (2023-10-05)
 
 
