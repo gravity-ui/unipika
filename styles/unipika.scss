@@ -27,7 +27,15 @@
   .null,
   .yql_null {
     color: var(--color-unipika-null);
+    
+  }
+
+  .null {
     font-style: italic;
+  }
+
+  .yql_null {
+    text-transform: uppercase;
   }
 
   .number,
