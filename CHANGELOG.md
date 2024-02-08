@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.0](https://github.com/gravity-ui/unipika/compare/v3.1.0...v3.2.0) (2024-02-08)
+
+
+### Features
+
+* yql_null should be normal-style and  uppercase ([a704975](https://github.com/gravity-ui/unipika/commit/a704975a33efa71a2ca6320bf7e27a78eeb7187d))
+
 ## [3.1.0](https://github.com/gravity-ui/unipika/compare/v3.0.0...v3.1.0) (2023-10-27)
 
 
