@@ -19,6 +19,34 @@ describe("plugins", function () {
       ).toBe("2000-01-01");
     });
 
+    test("max Date_32", function () {
+        expect(
+          _format(
+            {
+              $type: "yql.date32",
+              $value: "53375809",
+            },
+            {
+              asHTML: false,
+            }
+          )
+        ).toBe("+148108-01-02");
+      });
+
+    test("min Date_32", function () {
+        expect(
+          _format(
+            {
+              $type: "yql.date32",
+              $value: "-53375809",
+            },
+            {
+              asHTML: false,
+            }
+          )
+        ).toBe("-144168-01-01");
+      });
+
     test("Datetime", function () {
       expect(
         _format(
