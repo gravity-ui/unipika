@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/gravity-ui/unipika/compare/v3.2.0...v3.2.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* escape title for incomplete strings ([327c181](https://github.com/gravity-ui/unipika/commit/327c181b7577f48c41b61c20b3a8b3b159d936db))
+
 ## [3.2.0](https://github.com/gravity-ui/unipika/compare/v3.1.0...v3.2.0) (2024-02-08)
 
 
