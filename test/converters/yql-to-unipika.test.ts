@@ -945,6 +945,60 @@ describe("converters", function () {
       expect(yqlToYson([data, dataType], { maxListSize: 2 })).toEqual(result);
     });
 
+    test("YSON with column named val without treatValAsData setting", function () {
+      var dataType = ["ListType", ["StructType", [["column0", ["DataType", "Yson"]]]]];
+      var data = [[{val: {$value: "2", $type: "int64"}, a: {$value: "1", $type: "int64"}}]];
+      var result = {$type: 'yql.list', $value: [{
+          $type: "yql.struct",
+          $value: [[
+            {
+              "$key": true,
+              $type: "yql.string",
+              $value: "column0",
+            },
+            {
+              $type: "yql.yson",
+              $value: {
+                "a": {
+                  "$type": "int64",
+                  "$value": "1"
+                },
+                "val": {
+                  "$type": "int64",
+                  "$value": "2"
+                },
+              },
+            },
+          ]],
+        }]
+    };
+      expect(yqlToYson([data, dataType])).toEqual(result);
+    });
+
+    test("YSON with column named val with treatValAsData setting", function () {
+      var dataType = ["ListType", ["StructType", [["column0", ["DataType", "Yson"]]]]];
+      var data = [[{val: {$value: "2", $type: "int64"}, a: {$value: "1", $type: "int64"}}]];
+      var result = {$type: 'yql.list', $value: [{
+          $type: "yql.struct",
+          $value: [[
+            {
+              "$key": true,
+              $type: "yql.string",
+              $value: "column0",
+            },
+            {
+              $type: "yql.yson",
+              $value: {
+                "$type": "int64",
+                "$value": "2"
+              },
+            },
+          ]],
+        }]
+    };
+      expect(yqlToYson([data, dataType], {treatValAsData: true})).toEqual(result);
+    });
+
     test("Regular strings get truncated", function () {
       var text = "We're no strangers to love\nYou know the rules and so do I\nA full commitment's what I'm thinking of\nYou wouldn't get this from any other guy";
       var maxStringSize = 25;
