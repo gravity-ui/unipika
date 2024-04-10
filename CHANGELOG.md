@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/gravity-ui/unipika/compare/v3.2.1...v4.0.0) (2024-04-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* add `settings.treatValAsData` to operate with incomplete data
+
+### Features
+
+* add `settings.treatValAsData` to operate with incomplete data ([e0e7ca7](https://github.com/gravity-ui/unipika/commit/e0e7ca70d7f6797df69642232ae41c00b0f68966))
+
 ## [3.2.1](https://github.com/gravity-ui/unipika/compare/v3.2.0...v3.2.1) (2024-04-02)
 
 
