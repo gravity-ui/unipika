@@ -62,6 +62,23 @@ describe("converters", function () {
       });
     });
 
+    test("JsonDocument", function () {
+      var dataType = ["OptionalType", ["DataType", "JsonDocument"]];
+      expect(yqlToYson([[], dataType])).toEqual({
+        $type: "yql.null",
+        $value: null,
+      });
+      expect(yqlToYson([null, dataType])).toEqual({
+        $type: "yql.null",
+        $value: null,
+      });
+      expect(yqlToYson([["{\"email\":\"<i onclick='alert(123)'>User</i> <user@example.com>\"}"], dataType])).toEqual({
+        $type: "yql.json",
+        $value: "{\"email\":\"<i onclick='alert(123)'>User</i> <user@example.com>\"}",
+        $optional: 1,
+      });
+    });
+
     test("Struct", function () {
       var dataType = [
         "StructType",
