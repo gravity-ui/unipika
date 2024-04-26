@@ -578,6 +578,12 @@ module.exports = {
                     '[1,[2,3],{"key":"value\\nnewline"},null,false]',
                     ['DataType', 'Json']
                 ]
+            },
+            {
+                value: [
+                    "{\"email\":\"<i onclick='alert(123)'>User</i> <user@example.com>\"}",
+                    ["DataType", "JsonDocument"],
+                ]
             }
         ],
         converter: 'yql'
