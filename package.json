@@ -1,6 +1,6 @@
 {
   "name": "@gravity-ui/unipika",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Common YT/YQL data formatting library",
   "repository": {
     "type": "github",
