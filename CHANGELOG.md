@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/gravity-ui/unipika/compare/v4.0.0...v4.0.1) (2024-04-26)
+
+
+### Bug Fixes
+
+* convert yql jsondocument [CLOUDFRONT-27245] ([b749f9c](https://github.com/gravity-ui/unipika/commit/b749f9cada880ee92c2cda0967eb75a7a8d4ab06))
+
 ## [4.0.0](https://github.com/gravity-ui/unipika/compare/v3.2.1...v4.0.0) (2024-04-10)
 
 
