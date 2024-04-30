@@ -11,7 +11,10 @@
 
     .string,
     .yql_string,
-    .yql_utf8 {
+    .yql_utf8,
+    .pg_category_s,
+    .pg_category_i,
+    .pg_category_e {
         color: var(--color-unipika-string);
     }
 
@@ -42,7 +45,8 @@
     .yql_int8,
     .yql_int16,
     .yql_int32,
-    .yql_int64 {
+    .yql_int64,
+    .pg_category_n {
         color: var(--color-unipika-int);
     }
 
@@ -50,20 +54,23 @@
     .yql_uint8,
     .yql_uint16,
     .yql_uint32,
-    .yql_uint64 {
+    .yql_uint64,
+    .pg_category_a {
         color: var(--color-unipika-uint);
     }
 
     .double,
     .yql_double,
     .yql_float,
-    .yql_decimal {
+    .yql_decimal,
+    .pg_category_c {
         color: var(--color-unipika-float);
     }
 
     .boolean,
     .yql_bool,
-    .yql_enum {
+    .yql_enum,
+    .pg_category_b {
         color: var(--color-unipika-bool);
     }
 
@@ -72,11 +79,13 @@
     .yql_timestamp,
     .yql_tzdate,
     .yql_tzdatetime,
-    .yql_tztimestamp {
+    .yql_tztimestamp,
+    .pg_category_d {
         color: var(--color-unipika-date);
     }
 
-    .yql_interval {
+    .yql_interval,
+    .pg_category_t {
         color: var(--color-unipika-interval);
     }
 
@@ -96,7 +105,8 @@
     }
 
     .binary,
-    .incomplete {
+    .incomplete,
+    .pg_category_v {
         background-color: var(--color-unipika-binary-back);
     }
 
@@ -122,7 +132,8 @@
         white-space: nowrap;
     }
 
-    .yql_uuid {
+    .yql_uuid,
+    .pg_category_g {
         color: var(--color-unipika-uuid);
 
         &.binary,

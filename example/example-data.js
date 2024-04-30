@@ -629,4 +629,18 @@ module.exports = {
         ],
         converter: 'yql',
     },
+    'yql.pg': {
+        examples: [
+            {
+                value: ['{1,2}', ['PgType', '_int4', 'N']],
+            },
+            {
+                value: ['1 2', ['PgType', 'oidvector', 'A']],
+            },
+            {
+                value: ['001', ['PgType', 'varbit', 'V']],
+            },
+        ],
+        converter: 'yql',
+    },
 };

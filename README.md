@@ -18,7 +18,7 @@ Function accepts data in Unipika-YSON format (hereinafter referred to as the - U
 | Source format | Types                                                                                                                            |
 | ------------- | -------------------------------------------------------------------------------------------------------------------------------- |
 | YSON          | `string`, `number`, `int64`, `uint64`, `double`, `map`, `list`, `null`                                                           |
-| YQL           | `yql.string`, `yql.int64`, `yql.uint64`, `yql.double`, `yql.struct`, `yql.dict`, `yql.list`, `yql.tuple`, `yql.null`, `yql.yson`, `yql.pg.*` - simple PostgreSQL Data Types in YQL are being formatted as `yql.string` |
+| YQL           | `yql.string`, `yql.int64`, `yql.uint64`, `yql.double`, `yql.struct`, `yql.dict`, `yql.list`, `yql.tuple`, `yql.null`, `yql.yson`, `yql.pg.*` - PostgreSQL Data Types in YQL are being formatted as string |
 
 Similar in meaning types are displayed similarly. For example, `int64` and `yql.int64`, `map` and `yql.struct`, etc.
 
