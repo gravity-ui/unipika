@@ -86,6 +86,15 @@ describe('format', function () {
                     },
                 },
             );
+            io.set(
+                {$type: 'yql.pg.varbit', $value: '001', $category: 'V'},
+                {
+                    json: {
+                        plain: '001',
+                        html: '<span class="yql_pg_varbit pg_category_v">001</span>',
+                    },
+                },
+            );
             runTestCases(io, 'json', {
                 break: false,
                 indent: 0,
