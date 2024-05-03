@@ -1,11 +1,11 @@
 'use strict';
 
-const gulp = require('gulp');
 const browserify = require('browserify');
-const sass = require('gulp-sass');
+const gulp = require('gulp');
 const prefix = require('gulp-autoprefixer');
-const source = require('vinyl-source-stream');
+const sass = require('gulp-dart-sass');
 const derequire = require('gulp-derequire');
+const source = require('vinyl-source-stream');
 
 const DIST = './dist/';
 const LIB = './lib/';
@@ -22,7 +22,8 @@ gulp.task('bundle-scripts', () => {
 
 // Stylus + Autoprefixer
 gulp.task('bundle-styles', () => {
-    return gulp.src(STYLES + 'unipika.scss')
+    return gulp
+        .src(STYLES + 'unipika.scss')
         .pipe(sass())
         .pipe(prefix(['last 2 version']))
         .pipe(gulp.dest(DIST));
@@ -35,10 +36,10 @@ gulp.task('bundle-example', () => {
         .pipe(gulp.dest(EXAMPLE_DIST));
 });
 
-
 // Stylus + Autoprefixer
 gulp.task('bundle-example-styles', () => {
-    return gulp.src('./example/example.scss')
+    return gulp
+        .src('./example/example.scss')
         .pipe(sass())
         .pipe(prefix(['last 2 version']))
         .pipe(gulp.dest(EXAMPLE_DIST));

@@ -1,11 +1,12 @@
 {
-  "globals": {
-    "unipika": true,
-    "testUtils": true,
-    "chai": true,
-    "beforeEach": true,
-    "afterEach": true,
-    "describe": true,
-    "it": true
-  }
+    "globals": {
+        "unipika": true,
+        "testUtils": true,
+        "chai": true,
+        "beforeEach": true,
+        "afterEach": true,
+        "describe": true,
+        "it": true,
+        "module": true,
+    },
 }
