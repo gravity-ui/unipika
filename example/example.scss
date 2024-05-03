@@ -12,14 +12,13 @@
 .example-wrapper > .unipika {
     width: 40%;
 
-    margin-right: 20px;
+    margin-inline-end: 20px;
 }
 
 .settings-wrapper {
     position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
+    inset-block: 0;
+    inset-inline-start: 0;
 
     width: 300px;
     padding: 0 20px;
@@ -29,7 +28,7 @@
 }
 
 .setting {
-    margin-bottom: 5px;
+    margin-block-end: 5px;
     padding: 5px 10px;
 }
 

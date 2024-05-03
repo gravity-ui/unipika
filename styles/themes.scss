@@ -1,45 +1,45 @@
 @mixin unipika-default {
-  .unipika {
-    --color-unipika-default: #a9a9a9;
-    --color-unipika-string: #594c4c;
-    --color-unipika-key: #d36b6b;
-    --color-unipika-null: #594c4c;
-    --color-unipika-int: #0095ff;
-    --color-unipika-uint: #c200ff;
-    --color-unipika-float: #ff00b9;
-    --color-unipika-bool: #00ba0a;
-    --color-unipika-date: #669933;
-    --color-unipika-interval: #339999;
-    --color-unipika-escape-text: #c7254e;
-    --color-unipika-escape-back: #ffeff3;
-    --color-unipika-binary-back: #fcf8e3;
-    --color-unipika-binary-after: #888888;
-    --color-unipika-uuid: #cc6633;
+    .unipika {
+        --color-unipika-default: #a9a9a9;
+        --color-unipika-string: #594c4c;
+        --color-unipika-key: #d36b6b;
+        --color-unipika-null: #594c4c;
+        --color-unipika-int: #0095ff;
+        --color-unipika-uint: #c200ff;
+        --color-unipika-float: #ff00b9;
+        --color-unipika-bool: #00ba0a;
+        --color-unipika-date: #669933;
+        --color-unipika-interval: #339999;
+        --color-unipika-escape-text: #c7254e;
+        --color-unipika-escape-back: #ffeff3;
+        --color-unipika-binary-back: #fcf8e3;
+        --color-unipika-binary-after: #888888;
+        --color-unipika-uuid: #cc6633;
 
-    --color-unipika-tag-url: #0044bb;
-    --color-unipika-tag-url-hover: #cc0000;
-  }
+        --color-unipika-tag-url: #0044bb;
+        --color-unipika-tag-url-hover: #cc0000;
+    }
 }
 
 @mixin unipika-dark {
-  .unipika {
-    --color-unipika-default: #707070;
-    --color-unipika-string: #9a8e8e;
-    --color-unipika-key: #d36b6b;
-    --color-unipika-null: #9a8e8e;
-    --color-unipika-int: #0095ff;
-    --color-unipika-uint: #c200ff;
-    --color-unipika-float: #ff00b9;
-    --color-unipika-bool: #00ba0a;
-    --color-unipika-date: #669933;
-    --color-unipika-interval: #339999;
-    --color-unipika-escape-text: #c7254e;
-    --color-unipika-escape-back: #292e1f;
-    --color-unipika-binary-back: #292e1f;
-    --color-unipika-binary-after: #666666;
-    --color-unipika-uuid: #cc6633;
+    .unipika {
+        --color-unipika-default: #707070;
+        --color-unipika-string: #9a8e8e;
+        --color-unipika-key: #d36b6b;
+        --color-unipika-null: #9a8e8e;
+        --color-unipika-int: #0095ff;
+        --color-unipika-uint: #c200ff;
+        --color-unipika-float: #ff00b9;
+        --color-unipika-bool: #00ba0a;
+        --color-unipika-date: #669933;
+        --color-unipika-interval: #339999;
+        --color-unipika-escape-text: #c7254e;
+        --color-unipika-escape-back: #292e1f;
+        --color-unipika-binary-back: #292e1f;
+        --color-unipika-binary-after: #666666;
+        --color-unipika-uuid: #cc6633;
 
-    --color-unipika-tag-url: #4477bb;
-    --color-unipika-tag-url-hover: #66aaff;
-  }
+        --color-unipika-tag-url: #4477bb;
+        --color-unipika-tag-url-hover: #66aaff;
+    }
 }
