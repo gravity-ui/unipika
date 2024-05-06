@@ -30,10 +30,11 @@ describe('converters', function () {
             });
         });
         test('PG int4', function () {
-            const result = yqlToYson([4, ['PgType', 'int4']]);
+            const result = yqlToYson([4, ['PgType', 'int4', 'N']]);
             expect(result).toEqual({
                 $type: 'yql.pg.int4',
                 $value: 4,
+                $category: 'N',
             });
         });
 
@@ -155,7 +156,7 @@ describe('converters', function () {
                     ['DataType', 'Int64'],
                     ['DataType', 'String'],
                     ['DataType', 'Double'],
-                    ['PgType', 'int4'],
+                    ['PgType', 'int4', 'N'],
                 ],
             ];
             const data = ['1', 'foo', '4.321', 4];
@@ -177,6 +178,7 @@ describe('converters', function () {
                     {
                         $type: 'yql.pg.int4',
                         $value: 4,
+                        $category: 'N',
                     },
                 ],
             };
@@ -211,7 +213,7 @@ describe('converters', function () {
             expect(yqlToYson([data, dataType])).toEqual(result);
         });
         test('PG List', function () {
-            const dataType = ['ListType', ['PgType', 'string']];
+            const dataType = ['ListType', ['PgType', 'string', 'S']];
             const data = ['a', 'при\nем', '1'];
             const result = {
                 $type: 'yql.list',
@@ -219,14 +221,17 @@ describe('converters', function () {
                     {
                         $type: 'yql.pg.string',
                         $value: 'a',
+                        $category: 'S',
                     },
                     {
                         $type: 'yql.pg.string',
                         $value: 'при\nем',
+                        $category: 'S',
                     },
                     {
                         $type: 'yql.pg.string',
                         $value: '1',
+                        $category: 'S',
                     },
                 ],
             };
