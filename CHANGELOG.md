@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.0.0](https://github.com/gravity-ui/unipika/compare/v4.0.1...v5.0.0) (2024-05-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* move to node 18 and add linters ([#35](https://github.com/gravity-ui/unipika/issues/35))
+
+### Features
+
+* move to node 18 and add linters ([#35](https://github.com/gravity-ui/unipika/issues/35)) ([46e5fee](https://github.com/gravity-ui/unipika/commit/46e5fee52ccbf0add26a8826ff43f3b554edfe15))
+* **YQL:** use pg categories for colorizing result [YQLFRONT-2386] ([#34](https://github.com/gravity-ui/unipika/issues/34)) ([478d78c](https://github.com/gravity-ui/unipika/commit/478d78c4f5e6db56ff10c3431c516b537971c649))
+
+
+### Bug Fixes
+
+* use node 18 in github actions ([#36](https://github.com/gravity-ui/unipika/issues/36)) ([3921895](https://github.com/gravity-ui/unipika/commit/3921895844d6ba13af0c88dc8234da2dbffeddac))
+
 ## [4.0.1](https://github.com/gravity-ui/unipika/compare/v4.0.0...v4.0.1) (2024-04-26)
 
 
