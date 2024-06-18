@@ -9,10 +9,6 @@ Function accepts data in Unipika-YSON format (hereinafter referred to as the - U
 - YSON to Unipikа
 - YQL to Unipika
 
-### Examples
-
-[View](https://github.yandex-team.ru/pages/data-ui/unipika/example/)
-
 ### List of supported types:
 
 | Source format | Types                                                                                                                            |
