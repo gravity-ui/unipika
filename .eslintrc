@@ -15,5 +15,6 @@
         "process": true,
         "module": true,
         "modules": true,
+        "BigInt": true
     },
 }

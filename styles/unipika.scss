@@ -75,8 +75,11 @@
     }
 
     .yql_date,
+    .yql_date32,
     .yql_datetime,
+    .yql_datetime64,
     .yql_timestamp,
+    .yql_timestamp64,
     .yql_tzdate,
     .yql_tzdatetime,
     .yql_tztimestamp,
@@ -85,6 +88,7 @@
     }
 
     .yql_interval,
+    .yql_interval64,
     .pg_category_t {
         color: var(--color-unipika-interval);
     }
