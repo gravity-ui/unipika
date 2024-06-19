@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.0](https://github.com/gravity-ui/unipika/compare/v5.0.0...v5.1.0) (2024-06-19)
+
+
+### Features
+
+* date32 datetime64 timestamp64 interval64 [YTFRONT-4087] ([#38](https://github.com/gravity-ui/unipika/issues/38)) ([9e3c84b](https://github.com/gravity-ui/unipika/commit/9e3c84b075e1231089a6106601990ae9e1d0915d))
+
 ## [5.0.0](https://github.com/gravity-ui/unipika/compare/v4.0.1...v5.0.0) (2024-05-06)
 
 
