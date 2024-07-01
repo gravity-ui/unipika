@@ -321,6 +321,24 @@ describe('format', function () {
                 },
             );
             io.set(
+                {$type: 'yql.tztimestamp64', $value: 1, $optional: 2},
+                {
+                    json: {
+                        plain: 1,
+                        html: '<span class="yql_tztimestamp64">1</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.tztimestamp64', $value: 1, $optional: 0},
+                {
+                    json: {
+                        plain: 1,
+                        html: '<span class="yql_tztimestamp64">1</span>',
+                    },
+                },
+            );
+            io.set(
                 {$type: 'yql.date', $value: 15000, $optional: 2},
                 {
                     json: {
@@ -447,6 +465,24 @@ describe('format', function () {
                 },
             );
             io.set(
+                {$type: 'yql.tzdate32', $value: 1, $optional: 2},
+                {
+                    json: {
+                        plain: 1,
+                        html: '<span class="yql_tzdate32">1</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.tzdate32', $value: 1, $optional: 0},
+                {
+                    json: {
+                        plain: 1,
+                        html: '<span class="yql_tzdate32">1</span>',
+                    },
+                },
+            );
+            io.set(
                 {$type: 'yql.tzdatetime', $value: 1, $optional: 2},
                 {
                     json: {
@@ -461,6 +497,24 @@ describe('format', function () {
                     json: {
                         plain: 1,
                         html: '<span class="yql_tzdatetime">1</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.tzdatetime64', $value: 1, $optional: 2},
+                {
+                    json: {
+                        plain: 1,
+                        html: '<span class="yql_tzdatetime64">1</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.tzdatetime64', $value: 1, $optional: 0},
+                {
+                    json: {
+                        plain: 1,
+                        html: '<span class="yql_tzdatetime64">1</span>',
                     },
                 },
             );
