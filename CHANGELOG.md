@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.0](https://github.com/gravity-ui/unipika/compare/v5.1.0...v5.2.0) (2024-07-02)
+
+
+### Features
+
+* support tzdate32, tzdatetime64, tztimestamp64 [YQLFRONT-2732] ([#42](https://github.com/gravity-ui/unipika/issues/42)) ([2d34a84](https://github.com/gravity-ui/unipika/commit/2d34a843bf5f63e5c76323c6cbebc55ee2659c77))
+
 ## [5.1.0](https://github.com/gravity-ui/unipika/compare/v5.0.0...v5.1.0) (2024-06-19)
 
 
