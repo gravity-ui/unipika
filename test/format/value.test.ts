@@ -303,20 +303,54 @@ describe('format', function () {
                 },
             );
             io.set(
-                {$type: 'yql.tztimestamp', $value: 1, $optional: 2},
+                {
+                    $type: 'yql.tztimestamp',
+                    $value: '1970-01-01T00:00:00.001000,GMT',
+                    $optional: 2,
+                },
                 {
                     json: {
-                        plain: 1,
-                        html: '<span class="yql_tztimestamp">1</span>',
+                        plain: '1970-01-01T00:00:00.001000,GMT',
+                        html: '<span class="yql_tztimestamp">1970-01-01T00:00:00.001000,GMT</span>',
                     },
                 },
             );
             io.set(
-                {$type: 'yql.tztimestamp', $value: 1, $optional: 0},
+                {
+                    $type: 'yql.tztimestamp',
+                    $value: '1970-01-01T00:00:00.001000,GMT',
+                    $optional: 0,
+                },
                 {
                     json: {
-                        plain: 1,
-                        html: '<span class="yql_tztimestamp">1</span>',
+                        plain: '1970-01-01T00:00:00.001000,GMT',
+                        html: '<span class="yql_tztimestamp">1970-01-01T00:00:00.001000,GMT</span>',
+                    },
+                },
+            );
+            io.set(
+                {
+                    $type: 'yql.tztimestamp64',
+                    $value: '1900-01-01T01:02:03.456789,Europe/Moscow',
+                    $optional: 2,
+                },
+                {
+                    json: {
+                        plain: '1900-01-01T01:02:03.456789,Europe/Moscow',
+                        html: '<span class="yql_tztimestamp64">1900-01-01T01:02:03.456789,Europe/Moscow</span>',
+                    },
+                },
+            );
+            io.set(
+                {
+                    $type: 'yql.tztimestamp64',
+                    $value: '1900-01-01T01:02:03.456789,Europe/Moscow',
+                    $optional: 0,
+                },
+                {
+                    json: {
+                        plain: '1900-01-01T01:02:03.456789,Europe/Moscow',
+                        html: '<span class="yql_tztimestamp64">1900-01-01T01:02:03.456789,Europe/Moscow</span>',
                     },
                 },
             );
@@ -429,38 +463,90 @@ describe('format', function () {
                 },
             );
             io.set(
-                {$type: 'yql.tzdate', $value: 1, $optional: 2},
+                {$type: 'yql.tzdate', $value: '2024-07-03,Europe/Moscow', $optional: 2},
                 {
                     json: {
-                        plain: 1,
-                        html: '<span class="yql_tzdate">1</span>',
+                        plain: '2024-07-03,Europe/Moscow',
+                        html: '<span class="yql_tzdate">2024-07-03,Europe/Moscow</span>',
                     },
                 },
             );
             io.set(
-                {$type: 'yql.tzdate', $value: 1, $optional: 0},
+                {$type: 'yql.tzdate', $value: '2024-07-03,Europe/Moscow', $optional: 0},
                 {
                     json: {
-                        plain: 1,
-                        html: '<span class="yql_tzdate">1</span>',
+                        plain: '2024-07-03,Europe/Moscow',
+                        html: '<span class="yql_tzdate">2024-07-03,Europe/Moscow</span>',
                     },
                 },
             );
             io.set(
-                {$type: 'yql.tzdatetime', $value: 1, $optional: 2},
+                {$type: 'yql.tzdate32', $value: '1900-01-01,Europe/Moscow', $optional: 2},
                 {
                     json: {
-                        plain: 1,
-                        html: '<span class="yql_tzdatetime">1</span>',
+                        plain: '1900-01-01,Europe/Moscow',
+                        html: '<span class="yql_tzdate32">1900-01-01,Europe/Moscow</span>',
                     },
                 },
             );
             io.set(
-                {$type: 'yql.tzdatetime', $value: 1, $optional: 0},
+                {$type: 'yql.tzdate32', $value: '1900-01-01,Europe/Moscow', $optional: 0},
                 {
                     json: {
-                        plain: 1,
-                        html: '<span class="yql_tzdatetime">1</span>',
+                        plain: '1900-01-01,Europe/Moscow',
+                        html: '<span class="yql_tzdate32">1900-01-01,Europe/Moscow</span>',
+                    },
+                },
+            );
+            io.set(
+                {
+                    $type: 'yql.tzdatetime',
+                    $value: '2024-07-02T08:56:02,Europe/Moscow',
+                    $optional: 2,
+                },
+                {
+                    json: {
+                        plain: '2024-07-02T08:56:02,Europe/Moscow',
+                        html: '<span class="yql_tzdatetime">2024-07-02T08:56:02,Europe/Moscow</span>',
+                    },
+                },
+            );
+            io.set(
+                {
+                    $type: 'yql.tzdatetime',
+                    $value: '2024-07-02T08:56:02,Europe/Moscow',
+                    $optional: 0,
+                },
+                {
+                    json: {
+                        plain: '2024-07-02T08:56:02,Europe/Moscow',
+                        html: '<span class="yql_tzdatetime">2024-07-02T08:56:02,Europe/Moscow</span>',
+                    },
+                },
+            );
+            io.set(
+                {
+                    $type: 'yql.tzdatetime64',
+                    $value: '1900-01-01T01:02:03,Europe/Moscow',
+                    $optional: 2,
+                },
+                {
+                    json: {
+                        plain: '1900-01-01T01:02:03,Europe/Moscow',
+                        html: '<span class="yql_tzdatetime64">1900-01-01T01:02:03,Europe/Moscow</span>',
+                    },
+                },
+            );
+            io.set(
+                {
+                    $type: 'yql.tzdatetime64',
+                    $value: '1900-01-01T01:02:03,Europe/Moscow',
+                    $optional: 0,
+                },
+                {
+                    json: {
+                        plain: '1900-01-01T01:02:03,Europe/Moscow',
+                        html: '<span class="yql_tzdatetime64">1900-01-01T01:02:03,Europe/Moscow</span>',
                     },
                 },
             );

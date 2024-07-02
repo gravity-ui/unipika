@@ -83,6 +83,9 @@
     .yql_tzdate,
     .yql_tzdatetime,
     .yql_tztimestamp,
+    .yql_tzdate32,
+    .yql_tzdatetime64,
+    .yql_tztimestamp64,
     .pg_category_d {
         color: var(--color-unipika-date);
     }
