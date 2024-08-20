@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.1](https://github.com/gravity-ui/unipika/compare/v5.2.0...v5.2.1) (2024-08-20)
+
+
+### Bug Fixes
+
+* negative wide dates format ([#44](https://github.com/gravity-ui/unipika/issues/44)) ([cfc3227](https://github.com/gravity-ui/unipika/commit/cfc32275f9bc64e993f71211688592ad7dec26af))
+
 ## [5.2.0](https://github.com/gravity-ui/unipika/compare/v5.1.0...v5.2.0) (2024-07-02)
 
 
