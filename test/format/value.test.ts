@@ -373,6 +373,24 @@ describe('format', function () {
                 },
             );
             io.set(
+                {$type: 'yql.date32', $value: -719529, $optional: 2},
+                {
+                    json: {
+                        plain: '-000002-12-31',
+                        html: '<span class="yql_date32">-000002-12-31</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.date32', $value: -719529, $optional: 0},
+                {
+                    json: {
+                        plain: '-000002-12-31',
+                        html: '<span class="yql_date32">-000002-12-31</span>',
+                    },
+                },
+            );
+            io.set(
                 {$type: 'yql.date32', $value: 53375807, $optional: 2},
                 {
                     json: {
@@ -409,6 +427,24 @@ describe('format', function () {
                 },
             );
             io.set(
+                {$type: 'yql.datetime64', $value: -62167305600, $optional: 2},
+                {
+                    json: {
+                        plain: '-000002-12-31T00:00:00Z',
+                        html: '<span class="yql_datetime64">-000002-12-31T00:00:00Z</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.datetime64', $value: -62167305600, $optional: 0},
+                {
+                    json: {
+                        plain: '-000002-12-31T00:00:00Z',
+                        html: '<span class="yql_datetime64">-000002-12-31T00:00:00Z</span>',
+                    },
+                },
+            );
+            io.set(
                 {$type: 'yql.datetime64', $value: 4611669811199, $optional: 2},
                 {
                     json: {
@@ -441,6 +477,24 @@ describe('format', function () {
                     json: {
                         plain: '2024-05-03T20:19:05.000000Z',
                         html: '<span class="yql_timestamp">2024-05-03T20:19:05.000000Z</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.timestamp64', $value: '-62167305600000000', $optional: 2},
+                {
+                    json: {
+                        plain: '-000002-12-31T00:00:00.000000Z',
+                        html: '<span class="yql_timestamp64">-000002-12-31T00:00:00.000000Z</span>',
+                    },
+                },
+            );
+            io.set(
+                {$type: 'yql.timestamp64', $value: '-62167305600000000', $optional: 0},
+                {
+                    json: {
+                        plain: '-000002-12-31T00:00:00.000000Z',
+                        html: '<span class="yql_timestamp64">-000002-12-31T00:00:00.000000Z</span>',
                     },
                 },
             );
