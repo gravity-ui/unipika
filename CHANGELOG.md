@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.2](https://github.com/gravity-ui/unipika/compare/v5.2.1...v5.2.2) (2025-03-24)
+
+
+### Bug Fixes
+
+* microseconds for negative timestamp64 ([#47](https://github.com/gravity-ui/unipika/issues/47)) ([9174c4d](https://github.com/gravity-ui/unipika/commit/9174c4d569dec06a956ae33a7fbd15e69b8f8a1a))
+
 ## [5.2.1](https://github.com/gravity-ui/unipika/compare/v5.2.0...v5.2.1) (2024-08-20)
 
 
