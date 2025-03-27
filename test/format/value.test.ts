@@ -484,8 +484,8 @@ describe('format', function () {
                 {$type: 'yql.timestamp64', $value: '-62167305600000000', $optional: 2},
                 {
                     json: {
-                        plain: '-000002-12-31T00:00:00.000000Z',
-                        html: '<span class="yql_timestamp64">-000002-12-31T00:00:00.000000Z</span>',
+                        plain: '-2-12-31T00:00:00.000000Z',
+                        html: '<span class="yql_timestamp64">-2-12-31T00:00:00.000000Z</span>',
                     },
                 },
             );
@@ -494,8 +494,8 @@ describe('format', function () {
                 {$type: 'yql.timestamp64', $value: '-62167305600000000', $optional: 0},
                 {
                     json: {
-                        plain: '-000002-12-31T00:00:00.000000Z',
-                        html: '<span class="yql_timestamp64">-000002-12-31T00:00:00.000000Z</span>',
+                        plain: '-2-12-31T00:00:00.000000Z',
+                        html: '<span class="yql_timestamp64">-2-12-31T00:00:00.000000Z</span>',
                     },
                 },
             );
