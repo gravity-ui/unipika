@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.0](https://github.com/gravity-ui/unipika/compare/v5.2.2...v5.3.0) (2025-03-27)
+
+
+### Features
+
+* remove leading zeros for timestamps ([#49](https://github.com/gravity-ui/unipika/issues/49)) ([94035c6](https://github.com/gravity-ui/unipika/commit/94035c60ec81ad0c4c9e918eab02c24551309e07))
+
 ## [5.2.2](https://github.com/gravity-ui/unipika/compare/v5.2.1...v5.2.2) (2025-03-24)
 
 
