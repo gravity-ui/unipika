@@ -578,15 +578,13 @@ module.exports = {
             },
             {
                 value: [
-                    ['https://jing.yandex-team.ru/files/sirinity13/cE2v8k4.jpg'],
+                    'https://jing.yandex-team.ru/files/sirinity13/cE2v8k4.jpg',
                     ['TaggedType', 'imageurl', ['DataType', 'String']],
                 ],
             },
             {
                 value: [
-                    [
-                        'https://speechbase-yt.voicetech.yandex.net/getaudio/104629/00-00-51-25477850-f019-11e7-aa35-7ef73899f366.webm',
-                    ],
+                    'https://speechbase-yt.voicetech.yandex.net/getaudio/104629/00-00-51-25477850-f019-11e7-aa35-7ef73899f366.webm',
                     ['TaggedType', 'audiourl', ['DataType', 'String']],
                 ],
             },
