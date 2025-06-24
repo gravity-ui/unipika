@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.1](https://github.com/gravity-ui/unipika/compare/v5.3.0...v5.3.1) (2025-06-24)
+
+
+### Bug Fixes
+
+* bug with raw view in chain tagged&optional ([#53](https://github.com/gravity-ui/unipika/issues/53)) ([58bb736](https://github.com/gravity-ui/unipika/commit/58bb736eca0d0eb77810db78f34d72127a4014e8))
+* examples ([#51](https://github.com/gravity-ui/unipika/issues/51)) ([c4d84f4](https://github.com/gravity-ui/unipika/commit/c4d84f4cc148a45e3fdf330ea11e8745bd7f13a1))
+
 ## [5.3.0](https://github.com/gravity-ui/unipika/compare/v5.2.2...v5.3.0) (2025-03-27)
 
 
