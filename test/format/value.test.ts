@@ -813,6 +813,24 @@ describe('format', function () {
                     },
                 },
             );
+            // tagged value need wrap as optional if $optional > 0
+            io.set(
+                {
+                    $type: 'yql.tagged',
+                    $value: {
+                        $type: 'yql.null',
+                        $value: null,
+                        $optional: 1,
+                    },
+                    $optional: 1,
+                },
+                {
+                    json: {
+                        plain: '[[null]]',
+                        html: '<span class="optional">[</span><span class="optional">[</span><span class="yql_null">null</span><span class="optional">]</span><span class="optional">]</span>',
+                    },
+                },
+            );
             runTestCases(io, 'json', {
                 break: false,
                 indent: 0,
