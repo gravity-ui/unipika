@@ -827,10 +827,44 @@ describe('format', function () {
                 {
                     json: {
                         plain: '[[null]]',
-                        html: '<span class="optional">[</span><span class="optional">[</span><span class="yql_null">null</span><span class="optional">]</span><span class="optional">]</span>',
+                        html: '<span class="optional">[[</span><span class="yql_null">null</span><span class="optional">]]</span>',
                     },
                 },
             );
+
+            expect(
+                unipika.formatValue(
+                    {
+                        $type: 'yql.list',
+                        $value: [
+                            {
+                                $type: 'yql.tagged',
+                                $value: {$type: 'yql.null', $value: null, $optional: 1},
+                                $optional: 1,
+                            },
+                            {
+                                $type: 'yql.tagged',
+                                $value: {$type: 'yql.null', $value: null, $optional: 1},
+                                $optional: 1,
+                            },
+                            {
+                                $type: 'yql.tagged',
+                                $value: {$type: 'yql.null', $value: null, $optional: 1},
+                                $optional: 1,
+                            },
+                        ],
+                        $optional: 1,
+                    },
+                    {
+                        break: false,
+                        indent: 0,
+                        nonBreakingIndent: false,
+                        asHTML: false,
+                        format: 'json',
+                    },
+                ),
+            ).toBe('[[[null]],[[null]],[[null]]]');
+
             runTestCases(io, 'json', {
                 break: false,
                 indent: 0,
