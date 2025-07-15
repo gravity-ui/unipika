@@ -865,6 +865,60 @@ describe('format', function () {
                 ),
             ).toBe('[[[null]],[[null]],[[null]]]');
 
+            expect(
+                unipika.formatValue(
+                    {
+                        $type: 'yql.list',
+                        $value: [
+                            {
+                                $type: 'yql.tagged',
+                                $value: {$type: 'yql.null', $value: 1, $optional: 1},
+                                $optional: 1,
+                            },
+                            {
+                                $type: 'yql.tagged',
+                                $value: {$type: 'yql.null', $value: 2, $optional: 1},
+                                $optional: 1,
+                            },
+                            {
+                                $type: 'yql.tagged',
+                                $value: {$type: 'yql.null', $value: 3, $optional: 1},
+                                $optional: 1,
+                            },
+                        ],
+                        $optional: 1,
+                    },
+                    {
+                        break: false,
+                        indent: 0,
+                        nonBreakingIndent: false,
+                        asHTML: false,
+                        format: 'json',
+                    },
+                ),
+            ).toBe('[1,2,3]');
+
+            expect(
+                unipika.formatValue(
+                    {
+                        $type: 'yql.tagged',
+                        $value: {
+                            $type: 'yql.int64',
+                            $value: 3,
+                            $optional: 1,
+                        },
+                        $optional: 1,
+                    },
+                    {
+                        break: false,
+                        indent: 0,
+                        nonBreakingIndent: false,
+                        asHTML: false,
+                        format: 'json',
+                    },
+                ),
+            ).toBe('3');
+
             runTestCases(io, 'json', {
                 break: false,
                 indent: 0,
