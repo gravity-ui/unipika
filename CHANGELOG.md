@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.4.0](https://github.com/gravity-ui/unipika/compare/v5.3.1...v5.4.0) (2025-07-15)
+
+
+### Features
+
+* add correct wrap [ brakets in chain tagged-optiona ([#55](https://github.com/gravity-ui/unipika/issues/55)) ([06b7bfa](https://github.com/gravity-ui/unipika/commit/06b7bfafe8a1613fbf07905aa691d521287d3c99))
+
 ## [5.3.1](https://github.com/gravity-ui/unipika/compare/v5.3.0...v5.3.1) (2025-06-24)
 
 
