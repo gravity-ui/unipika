@@ -143,6 +143,10 @@ describe('plugins', function () {
 
         expect(date()({$value: '-53375750'})).toBe('-144169-02-29');
 
+        expect(date()({$value: '-53375810'})).toBe('Invalid date');
+
+        expect(date()({$value: '53375808'})).toBe('Invalid date');
+
         expect(datetime()({$value: '-62162035201'})).toBe('-1-02-29T23:59:59Z');
 
         expect(datetime()({$value: '-62130499201'})).toBe('1-02-28T23:59:59Z');
