@@ -376,8 +376,8 @@ describe('format', function () {
                 {$type: 'yql.date32', $value: -719529, $optional: 2},
                 {
                     json: {
-                        plain: '-000002-12-31',
-                        html: '<span class="yql_date32">-000002-12-31</span>',
+                        plain: '-2-12-31',
+                        html: '<span class="yql_date32">-2-12-31</span>',
                     },
                 },
             );
@@ -385,8 +385,8 @@ describe('format', function () {
                 {$type: 'yql.date32', $value: -719529, $optional: 0},
                 {
                     json: {
-                        plain: '-000002-12-31',
-                        html: '<span class="yql_date32">-000002-12-31</span>',
+                        plain: '-2-12-31',
+                        html: '<span class="yql_date32">-2-12-31</span>',
                     },
                 },
             );
@@ -394,8 +394,8 @@ describe('format', function () {
                 {$type: 'yql.date32', $value: 53375807, $optional: 2},
                 {
                     json: {
-                        plain: '+148107-12-31',
-                        html: '<span class="yql_date32">+148107-12-31</span>',
+                        plain: '148107-12-31',
+                        html: '<span class="yql_date32">148107-12-31</span>',
                     },
                 },
             );
@@ -403,8 +403,8 @@ describe('format', function () {
                 {$type: 'yql.date32', $value: 53375807, $optional: 0},
                 {
                     json: {
-                        plain: '+148107-12-31',
-                        html: '<span class="yql_date32">+148107-12-31</span>',
+                        plain: '148107-12-31',
+                        html: '<span class="yql_date32">148107-12-31</span>',
                     },
                 },
             );
@@ -430,8 +430,8 @@ describe('format', function () {
                 {$type: 'yql.datetime64', $value: -62167305600, $optional: 2},
                 {
                     json: {
-                        plain: '-000002-12-31T00:00:00Z',
-                        html: '<span class="yql_datetime64">-000002-12-31T00:00:00Z</span>',
+                        plain: '-2-12-31T00:00:00Z',
+                        html: '<span class="yql_datetime64">-2-12-31T00:00:00Z</span>',
                     },
                 },
             );
@@ -439,8 +439,8 @@ describe('format', function () {
                 {$type: 'yql.datetime64', $value: -62167305600, $optional: 0},
                 {
                     json: {
-                        plain: '-000002-12-31T00:00:00Z',
-                        html: '<span class="yql_datetime64">-000002-12-31T00:00:00Z</span>',
+                        plain: '-2-12-31T00:00:00Z',
+                        html: '<span class="yql_datetime64">-2-12-31T00:00:00Z</span>',
                     },
                 },
             );
@@ -448,8 +448,8 @@ describe('format', function () {
                 {$type: 'yql.datetime64', $value: 4611669811199, $optional: 2},
                 {
                     json: {
-                        plain: '+148107-12-31T23:59:59Z',
-                        html: '<span class="yql_datetime64">+148107-12-31T23:59:59Z</span>',
+                        plain: '148107-12-31T23:59:59Z',
+                        html: '<span class="yql_datetime64">148107-12-31T23:59:59Z</span>',
                     },
                 },
             );
@@ -457,8 +457,8 @@ describe('format', function () {
                 {$type: 'yql.datetime64', $value: 4611669811199, $optional: 0},
                 {
                     json: {
-                        plain: '+148107-12-31T23:59:59Z',
-                        html: '<span class="yql_datetime64">+148107-12-31T23:59:59Z</span>',
+                        plain: '148107-12-31T23:59:59Z',
+                        html: '<span class="yql_datetime64">148107-12-31T23:59:59Z</span>',
                     },
                 },
             );
@@ -521,8 +521,8 @@ describe('format', function () {
                 {$type: 'yql.timestamp64', $value: '4611669811199999999', $optional: 2},
                 {
                     json: {
-                        plain: '+148107-12-31T23:59:59.999999Z',
-                        html: '<span class="yql_timestamp64">+148107-12-31T23:59:59.999999Z</span>',
+                        plain: '148107-12-31T23:59:59.999999Z',
+                        html: '<span class="yql_timestamp64">148107-12-31T23:59:59.999999Z</span>',
                     },
                 },
             );
@@ -530,8 +530,8 @@ describe('format', function () {
                 {$type: 'yql.timestamp64', $value: '4611669811199999999', $optional: 0},
                 {
                     json: {
-                        plain: '+148107-12-31T23:59:59.999999Z',
-                        html: '<span class="yql_timestamp64">+148107-12-31T23:59:59.999999Z</span>',
+                        plain: '148107-12-31T23:59:59.999999Z',
+                        html: '<span class="yql_timestamp64">148107-12-31T23:59:59.999999Z</span>',
                     },
                 },
             );

@@ -58,7 +58,11 @@ Format function wrapper, data is passed in YSON format, YSON to Unipika converte
 
 Format function wrapper, data is passed in YQL format (in the list `[data, dataType]`), YQL to Unipika converter is used.
 
-## TODO
-
-Plugins `yql-date`, `yql-datetime` and `yql-timestamp` do formatting of date by `Date.prototype.toISOString()`.
-If it is required it is better to use `moment.js` and rewrite the plugins.
+## Features of Working with Dates:
+1) All dates are converted to the Gregorian calendar.
+2) According to the Gregorian calendar, the first year AD is denoted as: 01-01-01T00:00:00.000000Z.
+If you subtract 1 microsecond from this date, you get the date -01-12-31T23:59:59.999999Z (the first year BC).
+3) To determine if a negative year is a leap year in the Gregorian calendar, first add 1 to the year, and then apply the usual leap year rules. Thus, the year -1 is a leap year (since -1 + 1 = 0, and 0 % 4 = 0, so it is a leap year).
+4) Year -1 came after year -2, but at the same time, -1-01-20 was before -01-01-21 (similarly, -1-01-01 was before -1-02-01). Thus, the minus sign applies only to the value of the year.
+5) There is no year zero in the Gregorian calendar, but this does not prevent us from considering year -1 as a leap year.
+6) It is important to understand that as input, the plugins yql-date, yql-datetime, and yql-timestamp receive time relative to the Unix epoch (1970-01-01T00:00:00.000000Z). Thus, the date 1-01-02 was 719161 days ago relative to the Unix epoch, but one day ahead of the beginning of the era (1-01-01).
