@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.5.0](https://github.com/gravity-ui/unipika/compare/v5.4.0...v5.5.0) (2025-07-29)
+
+
+### Features
+
+* add extended dates ([#57](https://github.com/gravity-ui/unipika/issues/57)) ([26b85c1](https://github.com/gravity-ui/unipika/commit/26b85c16aa202d2ba05aa5e8f41d7a0093033e8a))
+
 ## [5.4.0](https://github.com/gravity-ui/unipika/compare/v5.3.1...v5.4.0) (2025-07-15)
 
 
