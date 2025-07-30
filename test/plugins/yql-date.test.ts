@@ -109,6 +109,22 @@ describe('plugins', function () {
             ).toBe('0');
         });
 
+        test('Big int interval', function () {
+            expect(
+                _format(
+                    {
+                        $type: 'yql.interval64',
+                        $value: '9223339190399999999',
+                    },
+                    {
+                        asHTML: false,
+                    },
+                ),
+            ).toBe(
+                '106751610\u00a0days 23\u00a0hours 59\u00a0minutes 59\u00a0seconds 999999\u00a0microseconds',
+            );
+        });
+
         test('Invalid date', function () {
             expect(
                 _format(
