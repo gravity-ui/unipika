@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.0](https://github.com/gravity-ui/unipika/compare/v5.5.0...v5.6.0) (2025-07-30)
+
+
+### Features
+
+* add extended interval64 ([#59](https://github.com/gravity-ui/unipika/issues/59)) ([c318824](https://github.com/gravity-ui/unipika/commit/c318824e6b45a50531601147c86aaed3a1e509b9))
+
 ## [5.5.0](https://github.com/gravity-ui/unipika/compare/v5.4.0...v5.5.0) (2025-07-29)
 
 
