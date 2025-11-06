@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.1](https://github.com/gravity-ui/unipika/compare/v5.6.0...v5.6.1) (2025-11-06)
+
+
+### Bug Fixes
+
+* fix negative microseconds in timestamp ([#61](https://github.com/gravity-ui/unipika/issues/61)) ([f42ef45](https://github.com/gravity-ui/unipika/commit/f42ef45f7c283b6cd386b46f493cf44a2fad039c))
+
 ## [5.6.0](https://github.com/gravity-ui/unipika/compare/v5.5.0...v5.6.0) (2025-07-30)
 
 
