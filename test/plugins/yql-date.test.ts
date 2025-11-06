@@ -169,6 +169,20 @@ describe('plugins', function () {
 
         expect(timestamp()({$value: '-62162035199876877'})).toBe('-1-03-01T00:00:00.123123Z');
 
+        expect(timestamp()({$value: '-1'})).toBe('1969-12-31T23:59:59.999999Z');
+
+        expect(timestamp()({$value: '0'})).toBe('1970-01-01T00:00:00.000000Z');
+
+        expect(timestamp()({$value: '1'})).toBe('1970-01-01T00:00:00.000001Z');
+
+        expect(timestamp()({$value: '-86400000002'})).toBe('1969-12-30T23:59:59.999998Z');
+
+        expect(timestamp()({$value: '-86400000000'})).toBe('1969-12-31T00:00:00.000000Z');
+
+        expect(timestamp()({$value: '-2208988800000000'})).toBe('1900-01-01T00:00:00.000000Z');
+
+        expect(timestamp()({$value: '-2208988800000001'})).toBe('1899-12-31T23:59:59.999999Z');
+
         expect(timestamp()({$value: '-4611664800000000000'})).toBe(
             '-144169-02-29T00:00:00.000000Z',
         );
