@@ -493,7 +493,6 @@ describe('converters', function () {
                     },
                 ],
             };
-            console.log(yqlToYson([data, dataType]));
             expect(yqlToYson([data, dataType])).toEqual(result);
         });
 
@@ -501,8 +500,8 @@ describe('converters', function () {
             const dataType = ['VoidType'];
             const data = 'Void';
             const result = {
-                $type: 'yql.null',
-                $value: null,
+                $type: 'yql.void',
+                $value: 'Void',
             };
             expect(yqlToYson([data, dataType])).toEqual(result);
         });
