@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.2](https://github.com/gravity-ui/unipika/compare/v5.6.1...v5.6.2) (2025-12-16)
+
+
+### Bug Fixes
+
+* fix upcast void to null ([#63](https://github.com/gravity-ui/unipika/issues/63)) ([e721b11](https://github.com/gravity-ui/unipika/commit/e721b1125d25861aa64058b832ed61b894e638d3))
+
 ## [5.6.1](https://github.com/gravity-ui/unipika/compare/v5.6.0...v5.6.1) (2025-11-06)
 
 
