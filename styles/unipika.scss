@@ -1,6 +1,6 @@
-@import './themes.scss';
+@use './themes.scss';
 
-@include unipika-default;
+@include themes.unipika-default;
 
 .unipika {
     white-space: pre-wrap;
