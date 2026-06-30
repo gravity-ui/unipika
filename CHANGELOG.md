@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.3](https://github.com/gravity-ui/unipika/compare/v5.6.2...v5.6.3) (2026-06-30)
+
+
+### Bug Fixes
+
+* **styles:** migrate [@import](https://github.com/import) to [@use](https://github.com/use) ([#65](https://github.com/gravity-ui/unipika/issues/65)) ([596002e](https://github.com/gravity-ui/unipika/commit/596002ecb97c08b1ea0d81a6377c3cfb01df570f))
+
 ## [5.6.2](https://github.com/gravity-ui/unipika/compare/v5.6.1...v5.6.2) (2025-12-16)
 
 
