@@ -10,5 +10,5 @@
         "noUnusedParameters": false,
         "noImplicitReturns": false
     },
-    "include": ["lib/**/*", "test/**/*"]
+    "include": ["lib/**/*", "test/**/*", "vendor/**/*.d.ts"]
 }
