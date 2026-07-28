@@ -2,7 +2,7 @@ import {describe, expect, test} from '@jest/globals';
 
 import {toHTMLText, toPlainText} from '../utils';
 
-const unipika = require('../..')();
+const unipika = require('../..');
 
 describe('format', function () {
     const _formatFromYSON = unipika.formatFromYSON;

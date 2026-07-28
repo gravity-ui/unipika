@@ -1,0 +1,14 @@
+{
+    "extends": "@gravity-ui/tsconfig",
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": false,
+        "declaration": true,
+        "noEmit": true,
+        "strict": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noImplicitReturns": false
+    },
+    "include": ["lib/**/*", "test/**/*"]
+}

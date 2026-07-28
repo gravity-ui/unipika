@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-const unipika = require('../..')();
+const unipika = require('../..');
 const date = require('../../lib/plugins/yql-date');
 const datetime = require('../../lib/plugins/yql-datetime');
 const timestamp = require('../../lib/plugins/yql-timestamp');

@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-const unipika = require('../..')();
+const unipika = require('../..');
 
 const {format, formatRaw, converters} = unipika;
 
@@ -224,10 +224,5 @@ describe('characterization: factory function', () => {
         expect(unipika.utils.yson).toBeDefined();
         expect(unipika.utils.utf8).toBeDefined();
         expect(unipika.utils.type).toBeDefined();
-    });
-
-    test('returns object with say', () => {
-        expect(unipika.say).toBeDefined();
-        expect(unipika.say()).toBe('Unipika Pika!');
     });
 });

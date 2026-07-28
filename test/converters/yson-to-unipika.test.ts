@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, test} from '@jest/globals';
 
-const unipika = require('../..')();
+const unipika = require('../..');
 
 describe('converters', function () {
     describe('yson-to-unipika', function () {
