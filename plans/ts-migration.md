@@ -10,6 +10,7 @@ Migrate `@gravity-ui/unipika` from plain JS (CommonJS, gulp+browserify) to TypeS
 - **No default exports** — use named exports only (`export function format`, `export const converters`, `export type UnipikaSettings`, etc.). No `export default` anywhere.
 - **TypeScript**: keep current version already in devDependencies (^5.4.5). No upgrade.
 - **Ask before changing code.** Each phase is reviewed/approved before implementation.
+- **Phase progression is strictly by user command.** The assistant works through phases sequentially, but does NOT start the next phase until the user explicitly says to proceed. After completing a phase, the assistant stops and waits for the user's go-ahead.
 - Commits are made by the user, one per phase (or sub-phase), using **Conventional Commits** format (e.g. `feat:`, `fix:`, `chore:`, `refactor:`, `test:`, `docs:`). The assistant will be asked to generate commit message texts; the user will do the actual committing.
 
 ## Approved Runtime Changes
@@ -78,7 +79,7 @@ The following functions and objects will be exported as named exports:
 ## Migration Phases
 
 ### Phase 0 — Characterization tests (capture current behavior)
-**Status: [ ] NOT STARTED**
+**Status: [x] DONE** — 182 tests across 5 files in `test/characterization/`, all passing.
 
 Goal: write temporary tests in a separate directory (`test/characterization/`) that capture the *current* runtime behavior before any changes. These tests serve as a safety net — after each migration phase, run them to verify runtime hasn't changed. They will be deleted at the end of the migration.
 
@@ -88,24 +89,24 @@ Goal: write temporary tests in a separate directory (`test/characterization/`) t
 - `utils/format` — partially covered (`toPaddedHex`, `toPaddedOctal`, `binaryToHex`, `repeatChar`).
 
 **Missing coverage to add:**
-- [ ] `formatFromYQL` — no dedicated test for this format function.
-- [ ] `formatKey` — not directly tested.
-- [ ] `formatAttributes` — not directly tested.
-- [ ] All settings combinations: `compact`, `break`, `indent`, `maxStringSize`, `maxListSize`, `omitStructNull`, `treatValAsData`, `binaryAsHex`, `escapeWhitespace`, `escapeYQLStrings`, `nonBreakingIndent`, `highlightControlCharacter`, `validateSrcUrl`, `normalizeUrl`.
-- [ ] Error handling — invalid inputs that throw errors (e.g., unsupported `$value` types, invalid `$attributes`).
-- [ ] `formatValue` with `$optional` — more thorough coverage.
-- [ ] YQL type plugins without dedicated tests (verified: 25 of 28 YQL plugins untested — only `yql-date`, `yql-string`, `yql-uuid` have dedicated test files today).
-- [ ] The factory function itself — `require('../..')()` with/without settings.
-- [ ] `converters.raw` — converter output (only tested indirectly via formatRaw).
+- [x] `formatFromYQL` — no dedicated test for this format function.
+- [x] `formatKey` — not directly tested.
+- [x] `formatAttributes` — not directly tested.
+- [x] All settings combinations: `compact`, `break`, `indent`, `maxStringSize`, `maxListSize`, `omitStructNull`, `treatValAsData`, `binaryAsHex`, `escapeWhitespace`, `escapeYQLStrings`, `nonBreakingIndent`, `highlightControlCharacter`, `validateSrcUrl`, `normalizeUrl`.
+- [x] Error handling — invalid inputs that throw errors (e.g., unsupported `$value` types, invalid `$attributes`).
+- [x] `formatValue` with `$optional` — more thorough coverage.
+- [x] YQL type plugins without dedicated tests (verified: 25 of 28 YQL plugins untested — only `yql-date`, `yql-string`, `yql-uuid` have dedicated test files today).
+- [x] The factory function itself — `require('../..')()` with/without settings.
+- [x] `converters.raw` — converter output (only tested indirectly via formatRaw).
 
-- [ ] Create `test/characterization/` directory.
-- [ ] Write characterization tests covering all gaps above.
-- [ ] Verify all characterization tests pass against current codebase.
-- [ ] Add `test/characterization/` to `.eslintignore` (temporary, will be removed in Phase 8).
+- [x] Create `test/characterization/` directory.
+- [x] Write characterization tests covering all gaps above.
+- [x] Verify all characterization tests pass against current codebase.
+- [x] Add `test/characterization/` to `.eslintignore` (temporary, will be removed in Phase 8).
 - **Commit boundary.**
 
 ### Phase 1 — JS refactor: drop factory, AMD/UMD, `say()`; set up `tsconfig.json`
-**Status: [ ] NOT STARTED**
+**Status: [ ] NOT STARTED** (Phase 0 complete, awaiting user command to begin)
 
 Goal: drop the factory pattern, AMD/UMD/browser-global logic, and `say()`. Set up `tsconfig.json` and `typecheck` script. **No build tool change** — `package.json`'s `main` stays as `./lib/index.js` (raw source), no `exports` map, no `build/` directory, no gulpfile rewrite. The package keeps working for consumers exactly as it does today.
 
@@ -305,7 +306,7 @@ Goal: write a migration guide documenting all breaking changes for the new major
 
 | Phase | Description | Status |
 |-------|-------------|--------|
-| 0 | Characterization tests | NOT STARTED |
+| 0 | Characterization tests | ✅ DONE (182 tests, 5 files in `test/characterization/`) |
 | 1 | JS refactor: drop factory, AMD/UMD, `say()`; set up `tsconfig.json` | NOT STARTED |
 | 2 | Replace vendor/utf8 with npm | NOT STARTED |
 | 3 | Utils → TS | NOT STARTED |

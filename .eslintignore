@@ -5,3 +5,5 @@ node_modules
 vendor
 
 storybook-static
+
+test/characterization
