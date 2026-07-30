@@ -5,10 +5,9 @@
         "checkJs": false,
         "declaration": true,
         "noEmit": true,
-        "strict": false,
-        "noUnusedLocals": false,
-        "noUnusedParameters": false,
-        "noImplicitReturns": false
+        "target": "es2021",
+        "lib": ["es2021"],
+        "esModuleInterop": true
     },
     "include": ["lib/**/*", "test/**/*", "vendor/**/*.d.ts"]
 }

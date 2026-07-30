@@ -610,7 +610,7 @@ describe('converters', function () {
                         },
                     };
 
-                    const validateSrcUrl = (domain) => {
+                    const validateSrcUrl = (domain: string) => {
                         const url = new URL(domain);
                         const host = url ? url.host : '';
                         const re = /\S*foo\S*/;

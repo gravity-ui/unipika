@@ -2,12 +2,14 @@ import {describe, expect, test} from '@jest/globals';
 
 import {toHTMLText, toPlainText} from '../utils';
 
+import type {Input, Output} from './types';
+
 const unipika = require('../..');
 
 describe('format', function () {
     const _formatFromYSON = unipika.formatFromYSON;
 
-    function runTestCases(io, settings) {
+    function runTestCases(io: Map<Input, Output>, settings: unknown) {
         io.forEach(function (output, input) {
             describe('Gives correct output for: ' + JSON.stringify(input), function () {
                 Object.keys(output).forEach(function (format) {
@@ -888,7 +890,7 @@ describe('format', function () {
                     nonBreakingIndent: false,
                 };
 
-                function tryParsingAsJSON(value) {
+                function tryParsingAsJSON(value: unknown) {
                     const serialized = _formatFromYSON(value, settings);
 
                     JSON.parse(serialized);

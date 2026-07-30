@@ -2,16 +2,18 @@ import {describe, expect, test} from '@jest/globals';
 
 import {toHTMLText, toPlainText} from '../utils';
 
+import type {Input, Output} from './types';
+
 const unipika = require('../..');
 
-function stringifyOrEmpty(obj) {
+function stringifyOrEmpty(obj: unknown) {
     return obj !== undefined ? ' ' + JSON.stringify(obj) : '';
 }
 
 describe('format', function () {
     const _serialize = unipika.formatRaw;
 
-    function runTestCases(io, format, settings) {
+    function runTestCases(io: Map<Input, Output>, format: string, settings: unknown) {
         io.forEach(function (output, input) {
             test(
                 'Gives correct output for: ' + JSON.stringify(input) + stringifyOrEmpty(settings),
@@ -611,7 +613,7 @@ describe('format', function () {
                     nonBreakingIndent: false,
                 };
 
-                function tryParsingAsJSON(value) {
+                function tryParsingAsJSON(value: unknown) {
                     const serialized = _serialize(value, settings);
 
                     JSON.parse(serialized);
