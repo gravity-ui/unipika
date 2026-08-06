@@ -1,11 +1,24 @@
 import * as utils from '../utils/format';
 
-export function taggedPluginFactory(_format) {
-    function preparePluginClassName(tagName) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+type TaggedValue = {
+    src?: string;
+    width?: number | string;
+    height?: number | string;
+    maxWidth?: number | string;
+    maxHeight?: number | string;
+    text?: string;
+    href?: string;
+    title?: string;
+};
+
+export const taggedPluginFactory: PluginFactory = function (_format) {
+    function preparePluginClassName(tagName: string): string {
         return 'yql_tagged' + utils.WHITESPACE + 'tagged' + utils.WHITESPACE + 'tag_' + tagName;
     }
 
-    function buildMediaSrc(mimeType, value, settings) {
+    function buildMediaSrc(mimeType: string, value: string, settings: PluginSettings): string {
         if (mimeType === 'url') {
             return utils.normalizeUrl(value, settings);
         } else {
@@ -13,9 +26,9 @@ export function taggedPluginFactory(_format) {
         }
     }
 
-    function image(node, imageType, settings = {}) {
+    function image(node: PluginNode, imageType: string, settings: PluginSettings = {}): string {
         const {asHTML} = settings;
-        function buildImageHtml(src, style) {
+        function buildImageHtml(src: string, style = ''): string {
             const className = preparePluginClassName('image');
             return (
                 '<img class="' +
@@ -28,24 +41,25 @@ export function taggedPluginFactory(_format) {
             );
         }
 
-        function buildComplexImage() {
-            const src = buildMediaSrc(imageType, node.$value.src, settings);
+        function buildComplexImage(): string {
+            const value = node.$value as TaggedValue;
+            const src = buildMediaSrc(imageType, value.src as string, settings);
             if (!asHTML) {
                 return src;
             }
             const constraints = {
-                width: node.$value.width,
-                height: node.$value.height,
-                'max-width': node.$value.maxWidth,
-                'max-height': node.$value.maxHeight,
+                width: value.width,
+                height: value.height,
+                'max-width': value.maxWidth,
+                'max-height': value.maxHeight,
             };
-            const style = ['width', 'height', 'max-width', 'max-height']
+            const style = (['width', 'height', 'max-width', 'max-height'] as const)
                 .map(function (key) {
                     const rawValue = constraints[key];
                     if (!rawValue) {
                         return '';
                     }
-                    const value = isNaN(rawValue) ? rawValue : rawValue + 'px';
+                    const value = isNaN(rawValue as number) ? rawValue : rawValue + 'px';
                     return key + ':' + value;
                 })
                 .filter(Boolean)
@@ -54,8 +68,8 @@ export function taggedPluginFactory(_format) {
             return buildImageHtml(src, utils.escape(style));
         }
 
-        function buildSimpleImage() {
-            const src = buildMediaSrc(imageType, node.$value, settings);
+        function buildSimpleImage(): string {
+            const src = buildMediaSrc(imageType, String(node.$value), settings);
             return asHTML ? buildImageHtml(src) : src;
         }
 
@@ -66,15 +80,17 @@ export function taggedPluginFactory(_format) {
         }
     }
 
-    function imagePlugin(imageType) {
-        return function (node, settings /* , level*/) {
+    function imagePlugin(
+        imageType: string,
+    ): (node: PluginNode, settings: PluginSettings) => string {
+        return function (node: PluginNode, settings: PluginSettings /* , level*/) {
             return image(node, imageType, settings);
         };
     }
 
-    function video(node, videoType, settings) {
+    function video(node: PluginNode, videoType: string, settings: PluginSettings): string {
         const {asHTML} = settings;
-        function buildVideoHtml(src, style) {
+        function buildVideoHtml(src: string, style = ''): string {
             const className = preparePluginClassName('video');
             return (
                 '<video class="' +
@@ -87,24 +103,25 @@ export function taggedPluginFactory(_format) {
             );
         }
 
-        function buildComplexVideo() {
-            const src = buildMediaSrc(videoType, node.$value.src, settings);
+        function buildComplexVideo(): string {
+            const value = node.$value as TaggedValue;
+            const src = buildMediaSrc(videoType, value.src as string, settings);
             if (!asHTML) {
                 return src;
             }
             const constraints = {
-                width: node.$value.width,
-                height: node.$value.height,
-                'max-width': node.$value.maxWidth,
-                'max-height': node.$value.maxHeight,
+                width: value.width,
+                height: value.height,
+                'max-width': value.maxWidth,
+                'max-height': value.maxHeight,
             };
             const style = ['width', 'height', 'max-width', 'max-height']
                 .map(function (key) {
-                    const rawValue = constraints[key];
+                    const rawValue = constraints[key as keyof typeof constraints];
                     if (!rawValue) {
                         return '';
                     }
-                    const value = isNaN(rawValue) ? rawValue : rawValue + 'px';
+                    const value = isNaN(rawValue as number) ? rawValue : rawValue + 'px';
                     return key + ':' + value;
                 })
                 .filter(Boolean)
@@ -113,8 +130,8 @@ export function taggedPluginFactory(_format) {
             return buildVideoHtml(src, utils.escape(style));
         }
 
-        function buildSimpleVideo() {
-            const src = buildMediaSrc(videoType, node.$value, settings);
+        function buildSimpleVideo(): string {
+            const src = buildMediaSrc(videoType, String(node.$value), settings);
             return asHTML ? buildVideoHtml(src) : src;
         }
 
@@ -125,13 +142,15 @@ export function taggedPluginFactory(_format) {
         }
     }
 
-    function videoPlugin(videoType) {
-        return function (node, settings /* , level*/) {
+    function videoPlugin(
+        videoType: string,
+    ): (node: PluginNode, settings: PluginSettings) => string {
+        return function (node: PluginNode, settings: PluginSettings /* , level*/) {
             return video(node, videoType, settings);
         };
     }
 
-    function audio(audioBlob, audioType, settings) {
+    function audio(audioBlob: string, audioType: string, settings: PluginSettings): string {
         const {asHTML} = settings;
         const className = preparePluginClassName('audio');
         const src = buildMediaSrc(audioType, audioBlob, settings);
@@ -140,14 +159,16 @@ export function taggedPluginFactory(_format) {
             : utils.escape(audioBlob);
     }
 
-    function audioPlugin(audioType) {
-        return function (node, settings /* , level*/) {
-            return audio(node.$value, audioType, settings);
+    function audioPlugin(
+        audioType: string,
+    ): (node: PluginNode, settings: PluginSettings) => string {
+        return function (node: PluginNode, settings: PluginSettings /* , level*/) {
+            return audio(String(node.$value), audioType, settings);
         };
     }
 
-    function urlPlugin(node, settings, level) {
-        function formatUrl(href, text, title) {
+    function urlPlugin(node: PluginNode, settings: PluginSettings, level: number): string {
+        function formatUrl(href: string, text: string, title: string | undefined): string {
             const className = preparePluginClassName('url');
             const titleAttr = title ? ' title="' + utils.escape(title) + '"' : '';
             return (
@@ -163,16 +184,17 @@ export function taggedPluginFactory(_format) {
             );
         }
 
-        function formatSimpleUrl() {
-            const formattedValue = utils.escape(node.$value);
-            const formattedHref = utils.normalizeUrl(node.$value, settings);
+        function formatSimpleUrl(): string {
+            const formattedValue = utils.escape(String(node.$value));
+            const formattedHref = utils.normalizeUrl(String(node.$value), settings);
             return formatUrl(formattedHref, formattedValue, '');
         }
 
-        function formatNamedUrl() {
-            const formattedValue = utils.escape(node.$value.text || node.$value.href);
-            const formattedHref = utils.normalizeUrl(node.$value.href || '', settings);
-            return formatUrl(formattedHref, formattedValue, node.$value.title);
+        function formatNamedUrl(): string {
+            const value = node.$value as TaggedValue;
+            const formattedValue = utils.escape(value.text || value.href || '');
+            const formattedHref = utils.normalizeUrl(value.href || '', settings);
+            return formatUrl(formattedHref, formattedValue, value.title);
         }
 
         if (settings.asHTML) {
@@ -187,7 +209,10 @@ export function taggedPluginFactory(_format) {
         return _format(node, settings, level);
     }
 
-    const plugins = {
+    const plugins: Record<
+        string,
+        (node: PluginNode, settings: PluginSettings, level: number) => string
+    > = {
         'image/svg': imagePlugin('image/svg+xml'),
         'image/svg+xml': imagePlugin('image/svg+xml'),
         'image/jpeg': imagePlugin('image/jpeg'),
@@ -208,10 +233,10 @@ export function taggedPluginFactory(_format) {
         url: urlPlugin,
     };
 
-    function tagged(node, settings, level) {
-        const format = plugins[node.$tag] || _format;
-        return format(node.$value, settings, level);
+    function tagged(node: PluginNode, settings: PluginSettings, level: number): string {
+        const format = plugins[node.$tag as string] || _format;
+        return format(node.$value as PluginNode, settings, level);
     }
 
     return tagged;
-}
+};

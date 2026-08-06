@@ -1,4 +1,6 @@
-export function yqlDatePluginFactory(/*_format*/) {
+import type {PluginFactory, PluginNode} from './types';
+
+export const yqlDatePluginFactory: PluginFactory = function (_format) {
     const TIMESTAMP_MULTIPLIER = 24 * 60 * 60 * 1000; // number of milliseconds in a day
 
     const MIN_DAYS = -53_375_809; // соответствует дате -144169-01-01
@@ -6,23 +8,23 @@ export function yqlDatePluginFactory(/*_format*/) {
 
     const INVALID_MOCK = 'Invalid date';
 
-    function isLeapYear(year) {
+    function isLeapYear(year: number): boolean {
         // что бы узнать является ли отрицательный год високосным - к нем нужно прибавить 1,
         // а затем применить остальные признаки високосности - Особенность Григорианского календаря
         const y = year < 0 ? year + 1 : year;
         return y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0);
     }
 
-    function getDaysInYear(year) {
+    function getDaysInYear(year: number): number {
         return isLeapYear(year) ? 366 : 365;
     }
 
-    function getDaysInMonth(year, month) {
+    function getDaysInMonth(year: number, month: number): number {
         const monthDays = [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
         return monthDays[month - 1];
     }
 
-    function dateBeforeOurEra(daysSinceUnixEpoch) {
+    function dateBeforeOurEra(daysSinceUnixEpoch: number): string {
         const daysSinceUnixEpochOfStartEra =
             new Date('0001-01-01').getTime() / TIMESTAMP_MULTIPLIER - 1;
 
@@ -58,7 +60,7 @@ export function yqlDatePluginFactory(/*_format*/) {
         return `${currentYear}-${monthString}-${dayString}`;
     }
 
-    function dateConverter(node /*, settings, level*/) {
+    function dateConverter(node: PluginNode /*, settings, level*/): string {
         const daysSinceUnixEpoch = Number(node.$value);
 
         if (daysSinceUnixEpoch < MIN_DAYS || daysSinceUnixEpoch > MAX_DAYS) return INVALID_MOCK;
@@ -75,10 +77,10 @@ export function yqlDatePluginFactory(/*_format*/) {
 
         const dateISO = date.toISOString();
 
-        return dateISO.replace(/[+]?(\d+)/, year).split('T')[0];
+        return dateISO.replace(/[+]?(\d+)/, String(year)).split('T')[0];
     }
 
     dateConverter.isScalar = true;
 
     return dateConverter;
-}
+};

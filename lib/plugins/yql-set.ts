@@ -1,15 +1,17 @@
 import * as utils from '../utils/format';
 import {listFragmentFactory} from '../utils/list-fragment';
 
-export function yqlSetPluginFactory(_format) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const yqlSetPluginFactory: PluginFactory = function (_format) {
     const listFragment = listFragmentFactory(_format);
 
     const SET_START = '{';
     const SET_END = '}';
 
-    function yqlSet(node, settings, level) {
+    function yqlSet(node: PluginNode, settings: PluginSettings, level: number): string {
         let resultString = '';
-        const currentValue = node.$value;
+        const currentValue = node.$value as Array<unknown>;
         const listLength = currentValue.length;
 
         if (utils.drawFullView(listLength, settings)) {
@@ -30,4 +32,4 @@ export function yqlSetPluginFactory(_format) {
     yqlSet.isScalar = true;
 
     return yqlSet;
-}
+};

@@ -1,12 +1,14 @@
 import * as utils from '../utils/format';
 import {mapFragmentFactory} from '../utils/map-fragment';
 
-export function yqlStructPluginFactory(_format) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const yqlStructPluginFactory: PluginFactory = function (_format) {
     const mapFragment = mapFragmentFactory(_format);
 
-    function yqlStruct(node, settings, level) {
+    function yqlStruct(node: PluginNode, settings: PluginSettings, level: number): string {
         let resultString = '';
-        const currentValue = node.$value;
+        const currentValue = node.$value as Array<[PluginNode, unknown]>;
         const numberOfKeys = currentValue.length;
 
         const STRUCT_START = '(';
@@ -27,4 +29,4 @@ export function yqlStructPluginFactory(_format) {
     }
 
     return yqlStruct;
-}
+};

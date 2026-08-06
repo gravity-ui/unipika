@@ -1,5 +1,7 @@
-export function nullPluginFactory(/*_format*/) {
-    function entity(node, settings /*, level*/) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const nullPluginFactory: PluginFactory = function (/*_format*/) {
+    function entity(node: PluginNode, settings: PluginSettings /*, level*/) {
         return settings.format === 'yson' ? '#' : node.$value;
     }
 

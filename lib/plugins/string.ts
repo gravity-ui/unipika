@@ -1,15 +1,17 @@
 import * as utils from '../utils/format';
 
-export function stringPluginFactory(/*_format*/) {
-    function escapeString(settings, value) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const stringPluginFactory: PluginFactory = function (/*_format*/) {
+    function escapeString(settings: PluginSettings, value: unknown): string {
         return settings.format === 'json'
-            ? utils.escapeJSONString(settings, value)
-            : utils.escapeYSONString(settings, value);
+            ? utils.escapeJSONString(settings, String(value))
+            : utils.escapeYSONString(settings, String(value));
     }
 
-    function string(node, settings /*, level*/) {
-        let value;
-        let decodedValue;
+    function string(node: PluginNode, settings: PluginSettings /*, level*/): string {
+        let value: unknown;
+        let decodedValue: unknown;
 
         if (node.$key && settings.format === 'yson') {
             value = utils.unescapeKeyValue(node.$value);
@@ -22,11 +24,11 @@ export function stringPluginFactory(/*_format*/) {
         if (node.$binary) {
             // Binary strings are presented as hex (binary strings are those that cannot be decoded)
             return settings.binaryAsHex
-                ? utils.escapeYSONBinaryString(settings, value)
+                ? utils.escapeYSONBinaryString(settings, String(value))
                 : escapeString(settings, value);
         } else {
             return settings.showDecoded
-                ? utils.escapeJSONString(settings, decodedValue)
+                ? utils.escapeJSONString(settings, String(decodedValue))
                 : escapeString(settings, value);
         }
     }
@@ -34,4 +36,4 @@ export function stringPluginFactory(/*_format*/) {
     string.isScalar = true;
 
     return string;
-}
+};

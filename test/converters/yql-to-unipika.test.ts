@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-import * as unipika from '../..';
+const unipika = require('../..');
 
 describe('converters', function () {
     describe('yql-to-unipika', function () {

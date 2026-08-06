@@ -1,7 +1,14 @@
 import * as utils from '../utils/format';
 
-export function yqlUuidPluginFactory(/*_format*/) {
-    const chunkConfigs = [
+import type {PluginFactory, PluginNode} from './types';
+
+type ChunkConfig = {
+    length: number;
+    reverse: boolean;
+};
+
+export const yqlUuidPluginFactory: PluginFactory = function (/*_format*/) {
+    const chunkConfigs: ChunkConfig[] = [
         {length: 4, reverse: true},
         {length: 2, reverse: true},
         {length: 2, reverse: true},
@@ -9,10 +16,10 @@ export function yqlUuidPluginFactory(/*_format*/) {
         {length: 6, reverse: false},
     ];
 
-    function uuid(node /*, settings, level*/) {
+    function uuid(node: PluginNode /*, settings, level*/): string {
         let position = 0;
-        const chunks = [];
-        const value = node.$binary ? atob(node.$value) : node.$value;
+        const chunks: string[] = [];
+        const value = node.$binary ? atob(String(node.$value)) : String(node.$value);
 
         chunkConfigs.forEach(function (config) {
             const chunk = value
@@ -35,4 +42,4 @@ export function yqlUuidPluginFactory(/*_format*/) {
     uuid.isScalar = true;
 
     return uuid;
-}
+};

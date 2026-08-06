@@ -1,9 +1,11 @@
-export function booleanPluginFactory(/*_format*/) {
-    function boolean(node, settings /*, level*/) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const booleanPluginFactory: PluginFactory = function (/*_format*/) {
+    function boolean(node: PluginNode, settings: PluginSettings /*, level*/) {
         return settings.format === 'yson' ? '%' + node.$value : node.$value;
     }
 
     boolean.isScalar = true;
 
     return boolean;
-}
+};

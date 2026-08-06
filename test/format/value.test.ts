@@ -1,10 +1,10 @@
 import {describe, expect, test} from '@jest/globals';
 
-import * as unipika from '../..';
 import {toHTMLText, toPlainText} from '../utils';
 
 import type {Input, Output} from './types';
 
+const unipika = require('../..');
 
 function stringifyOrEmpty(obj: unknown) {
     return obj !== undefined ? ' ' + JSON.stringify(obj) : '';

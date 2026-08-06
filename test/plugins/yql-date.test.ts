@@ -1,9 +1,9 @@
 import {describe, expect, test} from '@jest/globals';
 
-import * as unipika from '../..';
-import {yqlDatePluginFactory as date} from '../../lib/plugins/yql-date';
-import {yqlDatetimePluginFactory as datetime} from '../../lib/plugins/yql-datetime';
-import {yqlTimestampPluginFactory as timestamp} from '../../lib/plugins/yql-timestamp';
+const unipika = require('../..');
+const {yqlDatePluginFactory: date} = require('../../lib/plugins/yql-date');
+const {yqlDatetimePluginFactory: datetime} = require('../../lib/plugins/yql-datetime');
+const {yqlTimestampPluginFactory: timestamp} = require('../../lib/plugins/yql-timestamp');
 
 describe('plugins', function () {
     describe('yql-date', function () {

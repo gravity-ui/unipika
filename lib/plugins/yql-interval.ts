@@ -1,12 +1,14 @@
 import * as utils from '../utils/format';
 
-export function yqlIntervalPluginFactory(/*_format*/) {
-    const toBigInt = (value) => {
-        if (Number.isNaN(Number(value))) return 0;
-        return BigInt(value);
+import type {PluginFactory, PluginNode} from './types';
+
+export const yqlIntervalPluginFactory: PluginFactory = function (/*_format*/) {
+    const toBigInt = (value: unknown): bigint => {
+        if (Number.isNaN(Number(value))) return 0n;
+        return BigInt(value as bigint);
     };
 
-    const absBigInt = (value) => {
+    const absBigInt = (value: bigint): bigint => {
         if (value < 0n) return -value;
         return value;
     };
@@ -33,7 +35,7 @@ export function yqlIntervalPluginFactory(/*_format*/) {
         },
     ];
 
-    function interval(node /*, settings, level*/) {
+    function interval(node: PluginNode /*, settings, level*/): string {
         let value = toBigInt(node.$value);
 
         const sign = value < 0 ? '-' : '';
@@ -44,7 +46,7 @@ export function yqlIntervalPluginFactory(/*_format*/) {
             return '0';
         }
 
-        const stringifiedInterval = PARTS.map(function (item) {
+        const stringifiedInterval = PARTS.map(function (item): [bigint, string] {
             let partialValue = value;
 
             if (item.divisor) {
@@ -73,4 +75,4 @@ export function yqlIntervalPluginFactory(/*_format*/) {
     interval.isScalar = true;
 
     return interval;
-}
+};

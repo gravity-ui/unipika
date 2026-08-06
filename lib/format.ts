@@ -1,4 +1,5 @@
 import {convert as rawConverter} from './converters/raw-to-unipika';
+import type {ConverterNode, ConverterSettings} from './converters/types';
 import {convert as yqlConverter} from './converters/yql-to-unipika';
 import {convert as ysonConverter} from './converters/yson-to-unipika';
 import {booleanPluginFactory} from './plugins/boolean';
@@ -7,9 +8,9 @@ import {int64PluginFactory} from './plugins/int64';
 import {listPluginFactory} from './plugins/list';
 import {mapPluginFactory} from './plugins/map';
 import {nullPluginFactory} from './plugins/null';
-import {numberPluginFactory} from './plugins/number';
 import {stringPluginFactory} from './plugins/string';
 import {taggedPluginFactory} from './plugins/tagged';
+import type {FormatFunction, PluginFunction, PluginSettings} from './plugins/types';
 import {uint64PluginFactory} from './plugins/uint64';
 import {yqlBoolPluginFactory} from './plugins/yql-bool';
 import {yqlDatePluginFactory} from './plugins/yql-date';
@@ -39,44 +40,46 @@ import {yqlUtf8PluginFactory} from './plugins/yql-utf8';
 import {yqlUuidPluginFactory} from './plugins/yql-uuid';
 import {yqlVariantPluginFactory} from './plugins/yql-variant';
 import {yqlYsonPluginFactory} from './plugins/yql-yson';
+import type {FormatNode, ScalarValue} from './utils/format';
 import * as utils from './utils/format';
 import {mapFragmentFactory} from './utils/map-fragment';
 
-// var TYPE_KEY = '$type';
 const VALUE_KEY = '$value';
 const ATTRIBUTES_KEY = '$attributes';
 
 const JSON = 'json';
 const YSON = 'yson';
 
-function defaultPlugin(node) {
+type Converter = (node: unknown, settings: ConverterSettings) => FormatNode | undefined;
+
+function defaultPlugin(node: FormatNode): string {
     return String(node.$value);
 }
 
 /* Main formatting rules */
-const _plugins = {};
+const _plugins: Record<string, PluginFunction> = {};
 
 const parentKey = Symbol('parent');
 
-function formatValue(node, settings, level) {
+function formatValue(node: FormatNode, settings: PluginSettings, level: number): ScalarValue {
     const child = node.$value;
 
     if (child instanceof Array) {
         child.forEach((ch) => {
             if (ch instanceof Object) {
-                ch[parentKey] = node;
+                (ch as Record<symbol, FormatNode>)[parentKey] = node;
             }
         });
     } else if (child instanceof Object) {
-        child[parentKey] = node;
+        (child as Record<symbol, FormatNode>)[parentKey] = node;
     }
 
     const pluginType = node.$type?.startsWith('yql.pg') ? 'yql.pg' : node.$type;
     const plugin = Object.prototype.hasOwnProperty.call(_plugins, pluginType)
         ? _plugins[pluginType]
-        : defaultPlugin;
+        : (defaultPlugin as PluginFunction);
 
-    const formattedValue = plugin(node, settings, level);
+    const formattedValue = plugin(node, settings, level) as ScalarValue;
 
     const wrappedValue = plugin.isScalar
         ? utils.wrapScalar(node, settings, formattedValue)
@@ -85,22 +88,22 @@ function formatValue(node, settings, level) {
     return utils.wrapOptional(node, settings, wrappedValue, parentKey);
 }
 
-function formatKey(key, settings, level) {
+function formatKey(key: unknown, settings: PluginSettings, level: number): ScalarValue {
     return formatValue(
         {
             $type: 'string',
             $special_key: true,
             $value: key,
             $decoded_value: key,
-        },
+        } as FormatNode,
         settings,
         level,
     );
 }
 
-function formatAttributes(node, settings, level) {
+function formatAttributes(node: ConverterNode, settings: PluginSettings, level: number): string {
     let resultString = '';
-    const currentAttributes = node.$attributes;
+    const currentAttributes = node.$attributes as Array<[FormatNode, unknown]>;
     const attributesLength = currentAttributes.length;
 
     if (utils.drawFullView(attributesLength, settings)) {
@@ -124,37 +127,40 @@ function formatAttributes(node, settings, level) {
     return resultString;
 }
 
-function hasAttributes(node) {
-    return Object.prototype.hasOwnProperty.call(node, '$attributes') && node.$attributes.length > 0;
+function hasAttributes(node: ConverterNode): boolean {
+    return (
+        Object.prototype.hasOwnProperty.call(node, '$attributes') &&
+        (node.$attributes as Array<unknown>).length > 0
+    );
 }
 
-const _format = function (node, settings, level) {
+const _format: FormatFunction = function (node, settings, level): string {
     level = level || 1;
 
     let resultString = '';
 
     if (settings.format === JSON) {
-        if (hasAttributes(node)) {
+        if (hasAttributes(node as ConverterNode)) {
             resultString += utils.OBJECT_START + utils.getIndent(settings, level);
             // Attributes
             resultString +=
                 formatKey(ATTRIBUTES_KEY, settings, level) + utils.getKeyValueSeparator(settings);
-            resultString += formatAttributes(node, settings, level + 1);
+            resultString += formatAttributes(node as ConverterNode, settings, level + 1);
 
             // Value
             resultString +=
                 formatKey(VALUE_KEY, settings, level) + utils.getKeyValueSeparator(settings);
-            resultString += formatValue(node, settings, level + 1);
+            resultString += formatValue(node as FormatNode, settings, level + 1);
 
             resultString += utils.getIndent(settings, level - 1) + utils.OBJECT_END;
         } else {
-            resultString += formatValue(node, settings, level);
+            resultString += formatValue(node as FormatNode, settings, level);
         }
     } else if (settings.format === YSON) {
-        if (hasAttributes(node)) {
-            resultString += formatAttributes(node, settings, level);
+        if (hasAttributes(node as ConverterNode)) {
+            resultString += formatAttributes(node as ConverterNode, settings, level);
         }
-        resultString += formatValue(node, settings, level);
+        resultString += formatValue(node as FormatNode, settings, level);
     }
 
     return resultString;
@@ -166,7 +172,7 @@ const mapFragment = mapFragmentFactory(_format);
 _plugins.list = listPluginFactory(_format);
 _plugins.map = mapPluginFactory(_format);
 _plugins.string = stringPluginFactory(_format);
-_plugins.number = numberPluginFactory(_format);
+_plugins.number = int64PluginFactory(_format);
 _plugins.int64 = int64PluginFactory(_format);
 _plugins.uint64 = uint64PluginFactory(_format);
 _plugins.double = doublePluginFactory(_format);
@@ -204,11 +210,11 @@ _plugins['yql.datetime64'] = _plugins['yql.datetime'];
 _plugins['yql.timestamp'] = yqlTimestampPluginFactory(_format);
 _plugins['yql.timestamp64'] = _plugins['yql.timestamp'];
 _plugins['yql.tzdate'] = yqlTzdatePluginFactory(_format);
-_plugins['yql.tzdate32'] = yqlTzdatePluginFactory(_format);
+_plugins['yql.tzdate32'] = _plugins['yql.tzdate'];
 _plugins['yql.tzdatetime'] = yqlTzdatetimePluginFactory(_format);
-_plugins['yql.tzdatetime64'] = yqlTzdatetimePluginFactory(_format);
+_plugins['yql.tzdatetime64'] = _plugins['yql.tzdatetime'];
 _plugins['yql.tztimestamp'] = yqlTztimestampPluginFactory(_format);
-_plugins['yql.tztimestamp64'] = yqlTztimestampPluginFactory(_format);
+_plugins['yql.tztimestamp64'] = _plugins['yql.tztimestamp'];
 _plugins['yql.interval'] = yqlIntervalPluginFactory(_format);
 _plugins['yql.interval64'] = _plugins['yql.interval'];
 _plugins['yql.uuid'] = yqlUuidPluginFactory(_format);
@@ -221,56 +227,60 @@ _plugins['yql.yson'] = yqlYsonPluginFactory(_format);
 _plugins['yql.tagged'] = yqlTaggedPluginFactory(_format);
 _plugins['yql.pg'] = yqlPgPluginFactory(_format);
 
-function format(node, settings, converter) {
+function format(node: unknown, settings?: PluginSettings, converter?: Converter): string {
     if (typeof node === 'undefined') {
         // Backward compatibility
         return utils.EMPTY_STRING;
     }
 
-    settings = settings || {};
+    settings = (settings || {}) as PluginSettings;
     converter =
         converter ||
         function (value) {
-            return value;
+            return value as FormatNode;
         };
 
-    settings.format = utils.parseSetting(settings, 'format', JSON);
-    settings.decodeUTF8 = utils.parseSetting(settings, 'decodeUTF8', true); // is YSON utf8 encoded?
-    settings.showDecoded = utils.parseSetting(settings, 'showDecoded', true);
-    settings.asHTML = utils.parseSetting(settings, 'asHTML', true);
-    settings.indent = utils.parseSetting(settings, 'indent', 4);
-    settings.break = utils.parseSetting(settings, 'break', true);
+    settings.format = utils.parseSetting(settings, 'format', JSON) as string;
+    settings.decodeUTF8 = utils.parseSetting(settings, 'decodeUTF8', true) as boolean;
+    settings.showDecoded = utils.parseSetting(settings, 'showDecoded', true) as boolean;
+    settings.asHTML = utils.parseSetting(settings, 'asHTML', true) as boolean;
+    settings.indent = utils.parseSetting(settings, 'indent', 4) as number;
+    settings.break = utils.parseSetting(settings, 'break', true) as boolean;
 
-    settings.compact = utils.parseSetting(settings, 'compact', false);
-    settings.binaryAsHex = utils.parseSetting(settings, 'binaryAsHex', true);
-    settings.escapeWhitespace = utils.parseSetting(settings, 'escapeWhitespace', true);
+    settings.compact = utils.parseSetting(settings, 'compact', false) as boolean;
+    settings.binaryAsHex = utils.parseSetting(settings, 'binaryAsHex', true) as boolean;
+    settings.escapeWhitespace = utils.parseSetting(settings, 'escapeWhitespace', true) as boolean;
     settings.highlightControlCharacter = utils.parseSetting(
         settings,
         'highlightControlCharacter',
         false,
-    );
-    settings.escapeYQLStrings = utils.parseSetting(settings, 'escapeYQLStrings', true);
-    settings.nonBreakingIndent = utils.parseSetting(settings, 'nonBreakingIndent', true);
-    settings.treatValAsData = utils.parseSetting(settings, 'treatValAsData', false);
+    ) as boolean;
+    settings.escapeYQLStrings = utils.parseSetting(settings, 'escapeYQLStrings', true) as boolean;
+    settings.nonBreakingIndent = utils.parseSetting(settings, 'nonBreakingIndent', true) as boolean;
+    settings.treatValAsData = utils.parseSetting(settings, 'treatValAsData', false) as boolean;
 
-    settings.validateSrcUrl = utils.parseSetting(settings, 'validateSrcUrl', () => false);
-    settings.normalizeUrl = utils.parseSetting(settings, 'normalizeUrl', (url) => encodeURI(url));
+    settings.validateSrcUrl = utils.parseSetting(settings, 'validateSrcUrl', () => false) as (
+        url: string,
+    ) => boolean;
+    settings.normalizeUrl = utils.parseSetting(settings, 'normalizeUrl', (url: string) =>
+        encodeURI(url),
+    ) as (url: string) => string;
 
-    return _format(converter(node, settings), settings);
+    return _format(converter(node, settings as ConverterSettings), settings, 0);
 }
 
-export {format, formatAttributes, formatKey, formatValue};
+export {format};
 
-export function formatFromYSON(node, settings) {
-    return format(node, settings, ysonConverter);
+export function formatFromYSON(node: unknown, settings?: PluginSettings): string {
+    return format(node, settings, ysonConverter as Converter);
 }
 
-export function formatFromYQL(node, settings) {
-    return format(node, settings, yqlConverter);
+export function formatFromYQL(node: unknown, settings?: PluginSettings): string {
+    return format(node, settings, yqlConverter as Converter);
 }
 
-export function formatRaw(node, settings) {
-    settings = settings || {};
+export function formatRaw(node: unknown, settings?: PluginSettings): string {
+    settings = (settings || {}) as PluginSettings;
 
     // Enforce "raw" settings
     settings.format = 'json';
@@ -278,5 +288,9 @@ export function formatRaw(node, settings) {
     settings.compact = false;
     settings.escapeWhitespace = true;
 
-    return format(node, settings, rawConverter);
+    return format(node, settings, rawConverter as Converter);
 }
+
+export {formatAttributes};
+export {formatKey};
+export {formatValue};

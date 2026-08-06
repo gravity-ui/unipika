@@ -1,8 +1,10 @@
 import {convert as jsonConverter} from '../converters/raw-to-unipika';
 import * as utils from '../utils/format';
 
-export function yqlJsonPluginFactory(_format) {
-    function yqlJson(node, settings, level) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const yqlJsonPluginFactory: PluginFactory = function (_format) {
+    function yqlJson(node: PluginNode, settings: PluginSettings, level: number): string {
         settings = Object.assign({}, settings, {
             format: utils.JSON,
             showDecoded: false,
@@ -11,7 +13,7 @@ export function yqlJsonPluginFactory(_format) {
         });
         let value = node.$value;
         try {
-            value = JSON.parse(node.$value);
+            value = JSON.parse(String(node.$value));
         } catch (e) {
             console.error('Invalid JSON string', node.$value);
         }
@@ -19,4 +21,4 @@ export function yqlJsonPluginFactory(_format) {
     }
 
     return yqlJson;
-}
+};

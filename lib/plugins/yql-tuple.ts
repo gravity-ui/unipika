@@ -1,15 +1,17 @@
 import * as utils from '../utils/format';
 import {listFragmentFactory} from '../utils/list-fragment';
 
-export function yqlTuplePluginFactory(_format) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const yqlTuplePluginFactory: PluginFactory = function (_format) {
     const listFragment = listFragmentFactory(_format);
 
     const TUPLE_START = '(';
     const TUPLE_END = ')';
 
-    function yqlTuple(node, settings, level) {
+    function yqlTuple(node: PluginNode, settings: PluginSettings, level: number): string {
         let resultString = '';
-        const currentValue = node.$value;
+        const currentValue = node.$value as Array<unknown>;
         const listLength = currentValue.length;
 
         if (utils.drawFullView(listLength, settings)) {
@@ -28,4 +30,4 @@ export function yqlTuplePluginFactory(_format) {
     }
 
     return yqlTuple;
-}
+};
