@@ -1,4 +1,4 @@
-import {ysonToUnipika as ysonConverter} from '../converters/yson-to-unipika';
+import {convert as ysonConverter} from '../converters/yson-to-unipika';
 import * as utils from '../utils/format';
 
 export function yqlYsonPluginFactory(_format) {

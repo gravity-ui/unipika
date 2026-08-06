@@ -1,7 +1,9 @@
-import * as utils from '../utils/format';
+import {parseSetting} from '../utils/format';
 import {type as getType} from '../utils/type';
 import {decode as decodeString} from '../utils/utf8';
 import * as yson from '../utils/yson';
+
+import type {ConverterNode, ConverterSettings} from './types';
 
 const VALUE = '$value';
 const DECODED_VALUE = '$decoded_value';
@@ -10,7 +12,7 @@ const ATTRIBUTES = '$attributes';
 const BINARY = '$binary';
 const INCOMPLETE = '$incomplete';
 
-const SERIALIZE_SAFE = {
+const SERIALIZE_SAFE: Record<string, null> = {
     string: null,
     number: null, // Does not include NaN, Infinity, -Infinity
     boolean: null,
@@ -19,7 +21,9 @@ const SERIALIZE_SAFE = {
     array: null,
 };
 
-function mapType(type) {
+type YsonInput = Record<string, unknown>;
+
+function mapType(type: string): string {
     switch (type) {
         case 'array':
             return 'list';
@@ -30,7 +34,7 @@ function mapType(type) {
     }
 }
 
-function copyIncomplete(normalized, node) {
+function copyIncomplete(normalized: ConverterNode, node: YsonInput): void {
     // Reference incomplete
     if (yson.hasSpecialProperty(node, INCOMPLETE)) {
         const incompleteType = getType(node[INCOMPLETE]);
@@ -43,11 +47,11 @@ function copyIncomplete(normalized, node) {
             );
         }
 
-        normalized[INCOMPLETE] = node[INCOMPLETE];
+        normalized[INCOMPLETE] = node[INCOMPLETE] as boolean;
     }
 }
 
-function copyAttributes(normalized, node) {
+function copyAttributes(normalized: ConverterNode, node: YsonInput): void {
     // Reference attributes
     if (yson.hasSpecialProperty(node, ATTRIBUTES)) {
         const attributesType = getType(node[ATTRIBUTES]);
@@ -60,11 +64,11 @@ function copyAttributes(normalized, node) {
             );
         }
 
-        normalized[ATTRIBUTES] = Object.assign({}, node[ATTRIBUTES]);
+        normalized[ATTRIBUTES] = Object.assign({}, node[ATTRIBUTES] as Record<string, unknown>);
     }
 }
 
-function copyTypeAndValue(normalized, node) {
+function copyTypeAndValue(normalized: ConverterNode, node: YsonInput): void {
     // Add standard wrapper
     // 42 => { $value: 42 }
     normalized[VALUE] = yson.hasSpecialProperty(node, VALUE) ? node[VALUE] : node;
@@ -88,7 +92,7 @@ function copyTypeAndValue(normalized, node) {
             );
         }
 
-        normalized[TYPE] = node[TYPE];
+        normalized[TYPE] = node[TYPE] as string;
     } else {
         normalized[TYPE] = mapType(valueType);
     }
@@ -96,31 +100,32 @@ function copyTypeAndValue(normalized, node) {
 
 const TAG_ATTRIBUTE_NAME = '_type_tag';
 
-function convertToTaggedType(normalized) {
+function convertToTaggedType(normalized: ConverterNode): void {
     // YT does not have a tagged type yet, tagged type is derived from attributes
     // If value is incomplete - do not convert, show as built-in-type
     if (
-        Object.prototype.hasOwnProperty.call(normalized, '$attributes') &&
-        !Object.prototype.hasOwnProperty.call(normalized, '$incomplete')
+        Object.prototype.hasOwnProperty.call(normalized, ATTRIBUTES) &&
+        !Object.prototype.hasOwnProperty.call(normalized, INCOMPLETE)
     ) {
-        const tagAttribute = normalized.$attributes[TAG_ATTRIBUTE_NAME];
+        const attributes = normalized[ATTRIBUTES] as Record<string, unknown>;
+        const tagAttribute = attributes[TAG_ATTRIBUTE_NAME];
 
         if (typeof tagAttribute !== 'undefined') {
-            const tag = yson.value(tagAttribute);
+            const tag = yson.value(tagAttribute as YsonInput);
 
             const convertedValue = convertTagValue(tag, normalized);
 
             if (convertedValue) {
                 normalized.$type = 'tagged';
-                normalized.$tag = tag;
+                normalized.$tag = tag as string;
                 normalized.$value = convertedValue;
-                delete normalized.$attributes[TAG_ATTRIBUTE_NAME];
+                delete attributes[TAG_ATTRIBUTE_NAME];
             }
         }
     }
 }
 
-function convertURLTagValue(normalized) {
+function convertURLTagValue(normalized: ConverterNode): ConverterNode | undefined {
     const value = normalized.$value;
     const type = normalized.$type;
 
@@ -132,27 +137,29 @@ function convertURLTagValue(normalized) {
             },
         };
     } else if (type === 'map') {
-        if (Object.prototype.hasOwnProperty.call(value, 'href')) {
+        const mapValue = value as Record<string, unknown>;
+        if (Object.prototype.hasOwnProperty.call(mapValue, 'href')) {
             return {
                 $type: 'tag_value',
                 $value: {
-                    href: yson.value(value.href),
-                    text: yson.value(value.text),
-                    title: yson.value(value.title),
+                    href: yson.value(mapValue.href as YsonInput),
+                    text: yson.value(mapValue.text as YsonInput),
+                    title: yson.value(mapValue.title as YsonInput),
                 },
             };
         }
     }
+    return undefined;
 }
 
-function convertOtherTagValue(normalized) {
+function convertOtherTagValue(normalized: ConverterNode): ConverterNode {
     return {
         $type: normalized.$type,
         $value: normalized.$value,
     };
 }
 
-function convertTagValue(tag, normalized) {
+function convertTagValue(tag: unknown, normalized: ConverterNode): ConverterNode | undefined {
     switch (tag) {
         case 'url':
             return convertURLTagValue(normalized);
@@ -162,47 +169,52 @@ function convertTagValue(tag, normalized) {
 }
 
 // Converter must not mutate original data
-function normalize(node) {
-    const normalized = {};
+function normalize(node: unknown): ConverterNode {
+    const normalized: ConverterNode = {$type: '', $value: undefined};
 
-    copyTypeAndValue(normalized, node);
-    copyAttributes(normalized, node);
-    copyIncomplete(normalized, node);
+    copyTypeAndValue(normalized, node as YsonInput);
+    copyAttributes(normalized, node as YsonInput);
+    copyIncomplete(normalized, node as YsonInput);
 
     convertToTaggedType(normalized);
 
     return normalized;
 }
 
-function restructureMap(nodeValue, settings) {
+function restructureMap(
+    nodeValue: Record<string, unknown>,
+    settings: ConverterSettings,
+): [ConverterNode, ConverterNode][] {
     return Object.keys(nodeValue).map(function (key) {
-        const convertedKey = ysonToUnipika(normalize(key), settings);
+        const convertedKey = convert(normalize(key), settings);
         convertedKey.$key = true;
-        return [convertedKey, ysonToUnipika(nodeValue[key], settings)];
+        return [convertedKey, convert(nodeValue[key], settings)];
     });
 }
 
-function convertAttributes(node, settings) {
-    node[ATTRIBUTES] = restructureMap(node[ATTRIBUTES], settings);
+function convertAttributes(node: ConverterNode, settings: ConverterSettings): ConverterNode {
+    node[ATTRIBUTES] = restructureMap(node[ATTRIBUTES] as Record<string, unknown>, settings);
     return node;
 }
 
-function convertMapValue(node, settings) {
-    node[VALUE] = restructureMap(node[VALUE], settings);
+function convertMapValue(node: ConverterNode, settings: ConverterSettings): ConverterNode {
+    node[VALUE] = restructureMap(node[VALUE] as Record<string, unknown>, settings);
     return node;
 }
 
-function convertListValue(node, settings) {
-    node[VALUE] = node[VALUE].map(function (currentNode) {
-        return ysonToUnipika(currentNode, settings);
+function convertListValue(node: ConverterNode, settings: ConverterSettings): ConverterNode {
+    node[VALUE] = (node[VALUE] as unknown[]).map(function (currentNode) {
+        return convert(currentNode, settings);
     });
     return node;
 }
 
-function convertStringValue(node, settings) {
+function convertStringValue(node: ConverterNode, settings: ConverterSettings): ConverterNode {
     try {
         node[DECODED_VALUE] = settings.decodeUTF8
-            ? decodeString(node[VALUE], {allowTruncatedEnd: node[INCOMPLETE]})
+            ? decodeString(node[VALUE] as string, {
+                  allowTruncatedEnd: node[INCOMPLETE] as boolean | undefined,
+              })
             : node[VALUE];
     } catch (e) {
         node[BINARY] = true;
@@ -211,31 +223,35 @@ function convertStringValue(node, settings) {
     return node;
 }
 
-export function ysonToUnipika(node, settings) {
-    let type;
+export function convert(node: unknown, settings?: ConverterSettings): ConverterNode {
+    let type: string;
 
-    settings = settings || {};
-    settings.decodeUTF8 = utils.parseSetting(settings, 'decodeUTF8', true);
+    const resolvedSettings: ConverterSettings = settings || {};
+    resolvedSettings.decodeUTF8 = parseSetting(
+        resolvedSettings as Record<string, unknown>,
+        'decodeUTF8',
+        true,
+    ) as boolean;
 
-    node = normalize(node);
+    let normalized: ConverterNode = normalize(node);
 
-    if (node) {
+    if (normalized) {
         // CONVERT ATTRIBUTES
-        if (yson.hasSpecialProperty(node, ATTRIBUTES)) {
-            node = convertAttributes(node);
+        if (yson.hasSpecialProperty(normalized as unknown as YsonInput, ATTRIBUTES)) {
+            normalized = convertAttributes(normalized, resolvedSettings);
         }
 
         // CONVERT VALUES
-        type = node[TYPE];
+        type = normalized[TYPE];
 
         if (type === 'map') {
-            node = convertMapValue(node, settings);
+            normalized = convertMapValue(normalized, resolvedSettings);
         } else if (type === 'list') {
-            node = convertListValue(node, settings);
+            normalized = convertListValue(normalized, resolvedSettings);
         } else if (type === 'string') {
-            node = convertStringValue(node, settings);
+            normalized = convertStringValue(normalized, resolvedSettings);
         }
     }
 
-    return node;
+    return normalized;
 }

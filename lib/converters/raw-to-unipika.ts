@@ -1,9 +1,10 @@
+import type {FormatNode} from '../utils/format';
 import {type as getType} from '../utils/type';
 
 const VALUE = '$value';
 const TYPE = '$type';
 
-const SERIALIZE_SAFE = {
+const SERIALIZE_SAFE: Record<string, null> = {
     string: null,
     number: null, // Does not include NaN, Infinity, -Infinity
     boolean: null,
@@ -12,7 +13,7 @@ const SERIALIZE_SAFE = {
     array: null,
 };
 
-function mapType(type) {
+function mapType(type: string): string {
     switch (type) {
         case 'array':
             return 'list';
@@ -24,7 +25,7 @@ function mapType(type) {
 }
 
 // Converter must not mutate original data
-function normalize(node) {
+function normalize(node: unknown): FormatNode {
     const nodeType = getType(node);
 
     if (!Object.prototype.hasOwnProperty.call(SERIALIZE_SAFE, nodeType)) {
@@ -37,7 +38,14 @@ function normalize(node) {
     };
 }
 
-function restructureMap(nodeValue, settings) {
+type RawSettings = {
+    [key: string]: unknown;
+};
+
+function restructureMap(
+    nodeValue: Record<string, unknown>,
+    settings: RawSettings,
+): [FormatNode, FormatNode][] {
     return Object.keys(nodeValue).map(function (key) {
         const convertedKey = normalize(key);
 
@@ -47,36 +55,36 @@ function restructureMap(nodeValue, settings) {
             convertedKey.$key = true;
         }
 
-        return [convertedKey, rawToUnipika(nodeValue[key], settings)];
+        return [convertedKey, convert(nodeValue[key], settings)];
     });
 }
 
-function convertMapValue(node, settings) {
-    node[VALUE] = restructureMap(node[VALUE], settings);
+function convertMapValue(node: FormatNode, settings: RawSettings): FormatNode {
+    node[VALUE] = restructureMap(node[VALUE] as Record<string, unknown>, settings);
     return node;
 }
 
-function convertListValue(node, settings) {
-    node[VALUE] = node[VALUE].map(function (currentNode) {
-        return rawToUnipika(currentNode, settings);
+function convertListValue(node: FormatNode, settings: RawSettings): FormatNode {
+    node[VALUE] = (node[VALUE] as unknown[]).map(function (currentNode) {
+        return convert(currentNode, settings);
     });
     return node;
 }
 
-export function rawToUnipika(node, settings) {
-    let type;
+export function convert(node: unknown, settings?: RawSettings): FormatNode {
+    let type: string;
 
-    node = normalize(node);
+    let normalized: FormatNode = normalize(node);
 
-    if (node) {
-        type = node[TYPE];
+    if (normalized) {
+        type = normalized[TYPE];
 
         if (type === 'map') {
-            node = convertMapValue(node, settings);
+            normalized = convertMapValue(normalized, settings || {});
         } else if (type === 'list') {
-            node = convertListValue(node, settings);
+            normalized = convertListValue(normalized, settings || {});
         }
     }
 
-    return node;
+    return normalized;
 }

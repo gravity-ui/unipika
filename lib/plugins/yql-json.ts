@@ -1,4 +1,4 @@
-import {rawToUnipika as jsonConverter} from '../converters/raw-to-unipika';
+import {convert as jsonConverter} from '../converters/raw-to-unipika';
 import * as utils from '../utils/format';
 
 export function yqlJsonPluginFactory(_format) {

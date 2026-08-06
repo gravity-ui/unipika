@@ -1087,5 +1087,30 @@ describe('converters', function () {
                 expect(atob(yson.$value).length).toEqual(26);
             });
         });
+
+        describe('Crash behavior on unknown type names (characterization)', function () {
+            // These tests capture the ORIGINAL runtime behavior when yqlToYson
+            // encounters an unknown type name (not in the switch). It returns
+            // undefined, and the caller crashes with a TypeError.
+            // See FIXME(Phase 4) comments in yql-to-unipika.ts.
+
+            test('OptionalType with unknown inner type throws TypeError', function () {
+                // hasData is truthy (non-empty array), yqlToYson returns undefined
+                // for the unknown inner type, then optionalData.$optional throws.
+                expect(function () {
+                    yqlToYson([['value'], ['OptionalType', ['UnknownType', 'whatever']]]);
+                }).toThrow(TypeError);
+            });
+
+            test('StructType with unknown inner type and omitStructNull throws TypeError', function () {
+                // yqlToYson returns undefined for the unknown inner type,
+                // then value.$value === null throws.
+                expect(function () {
+                    yqlToYson([[null], ['StructType', [['name', ['UnknownType', 'whatever']]]]], {
+                        omitStructNull: true,
+                    });
+                }).toThrow(TypeError);
+            });
+        });
     });
 });
