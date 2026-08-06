@@ -1,6 +1,21 @@
-// Based on https://gist.github.com/jonbretman/7259628
+// Based on https://gist.github.com/jonbretman/7257628
 
-export function type(o) {
+type TypeString =
+    | 'undefined'
+    | 'null'
+    | 'element'
+    | 'object'
+    | 'array'
+    | 'string'
+    | 'number'
+    | 'boolean'
+    | 'function'
+    | 'regexp'
+    | 'nan'
+    | 'infinity'
+    | 'symbol';
+
+export function type(o: unknown): TypeString {
     // handle corner cases for old IE and PhantomJS
     if (o === undefined) {
         return 'undefined';
@@ -11,7 +26,10 @@ export function type(o) {
     }
 
     // handle DOM elements
-    if (o && (o.nodeType === 1 || o.nodeType === 9)) {
+    if (
+        o &&
+        ((o as {nodeType?: number}).nodeType === 1 || (o as {nodeType?: number}).nodeType === 9)
+    ) {
         return 'element';
     }
 
@@ -20,72 +38,79 @@ export function type(o) {
 
     // handle NaN and Infinity
     if (result === 'number') {
-        if (isNaN(o)) {
+        if (isNaN(o as number)) {
             return 'nan';
         }
 
-        if (!isFinite(o)) {
+        if (!isFinite(o as number)) {
             return 'infinity';
         }
     }
 
-    return result;
+    return result as TypeString;
 }
 
-function isNull(o) {
+// Explicit is* methods (replacing the former generateMethod loop).
+// Each checks type(o) against the lowercased type name.
+
+export function isNull(o: unknown): boolean {
     return type(o) === 'null';
 }
 
-function isUndefined(o) {
+export function isUndefined(o: unknown): boolean {
     return type(o) === 'undefined';
 }
 
-function isObject(o) {
+export function isObject(o: unknown): boolean {
     return type(o) === 'object';
 }
 
-function isArray(o) {
+export function isArray(o: unknown): boolean {
     return type(o) === 'array';
 }
 
-function isString(o) {
+export function isString(o: unknown): boolean {
     return type(o) === 'string';
 }
 
-function isNumber(o) {
+export function isNumber(o: unknown): boolean {
     return type(o) === 'number';
 }
 
-function isBoolean(o) {
+export function isBoolean(o: unknown): boolean {
     return type(o) === 'boolean';
 }
 
-function isFunction(o) {
+export function isFunction(o: unknown): boolean {
     return type(o) === 'function';
 }
 
-function isRegExp(o) {
+export function isRegExp(o: unknown): boolean {
     return type(o) === 'regexp';
 }
 
-function isElement(o) {
+export function isElement(o: unknown): boolean {
     return type(o) === 'element';
 }
 
-function isNaNType(o) {
+export function isNaNType(o: unknown): boolean {
     return type(o) === 'nan';
 }
 
 // NOTE: isInfinite checks against 'infinite' (not 'infinity'), matching the
 // original generated behavior — a latent bug preserved for runtime parity.
-function isInfinite(o) {
-    return type(o) === 'infinite';
+// The comparison is cast to `string` to avoid TS flagging the dead branch.
+export function isInfinite(o: unknown): boolean {
+    return (type(o) as string) === 'infinite';
 }
 
-function isSymbol(o) {
+export function isSymbol(o: unknown): boolean {
     return type(o) === 'symbol';
 }
 
+// Attach is* methods to the type function, preserving the original
+// `type.isString`, `type.isNumber`, etc. access pattern (part of the public
+// `utils.type` export surface exposed via index.ts).
 type.isString = isString;
 type.isNumber = isNumber;
 type.isBoolean = isBoolean;

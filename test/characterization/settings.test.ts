@@ -2,7 +2,7 @@ import {describe, expect, test} from '@jest/globals';
 
 import * as unipika from '../..';
 
-const {format, formatKey, formatAttributes} = unipika;
+const {format} = unipika;
 
 const S = {asHTML: false, break: false, compact: true, indent: 0, nonBreakingIndent: false};
 const H = {asHTML: true, break: false, compact: true, indent: 0};

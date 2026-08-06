@@ -1,13 +1,46 @@
-export function parseSetting(settings, name, defaultValue) {
-    return settings && typeof settings[name] !== 'undefined' ? settings[name] : defaultValue;
+export type FormatSettings = {
+    asHTML?: boolean;
+    escapeWhitespace?: boolean;
+    highlightControlCharacter?: boolean;
+    nonBreakingIndent?: boolean;
+    break?: boolean;
+    indent?: number;
+    compact?: boolean;
+    format?: string;
+    normalizeUrl?: (url: string) => string;
+    limitListLength?: number;
+    limitMapLength?: number;
+};
+
+export type FormatNode = {
+    $type: string;
+    $value: unknown;
+    $category?: string;
+    $incomplete?: boolean | number;
+    $original_value?: string;
+    $binary?: boolean;
+    $key?: boolean;
+    $special_key?: boolean;
+    $optional?: number;
+    [key: symbol]: FormatNode | undefined;
+};
+
+function parseSetting(
+    settings: FormatSettings | null | undefined,
+    name: string,
+    defaultValue: unknown,
+): unknown {
+    return settings && typeof settings[name as keyof FormatSettings] !== 'undefined'
+        ? settings[name as keyof FormatSettings]
+        : defaultValue;
 }
 
-export function returnAsIs(settings, value) {
+function returnAsIs(_settings: FormatSettings, value: unknown): unknown {
     return value;
 }
 
 // Char utils
-export function repeatChar(char, repeatCount) {
+function repeatChar(char: string, repeatCount: number): string {
     let string = '';
     for (let i = 0; i < repeatCount; i++) {
         string += char;
@@ -15,44 +48,52 @@ export function repeatChar(char, repeatCount) {
     return string;
 }
 
-export function toPaddedHex(charCode, digits) {
+function toPaddedHex(charCode: number, digits: number): string {
     return (repeatChar('0', digits) + charCode.toString(16)).substr(-digits);
 }
 
-export function toPaddedOctal(charCode, digits) {
+function toPaddedOctal(charCode: number, digits: number): string {
     return (repeatChar('0', digits) + charCode.toString(8)).substr(-digits);
 }
 
-function isControlCharacter(charCode) {
+function isControlCharacter(charCode: number): boolean {
     return (charCode < 32 && charCode >= 0) || (charCode >= 0x7f && charCode <= 0x9f);
 }
 
-function charIsOctal(char) {
+function charIsOctal(char: string): boolean {
     return char >= '0' && char <= '7';
 }
 
-function nextCharNotOctal(initialString, initialLength, currentIndex) {
+function nextCharNotOctal(
+    initialString: string,
+    initialLength: number,
+    currentIndex: number,
+): boolean {
     return !(currentIndex < initialLength - 1 && charIsOctal(initialString[currentIndex + 1]));
 }
 
-function charIsHex(char) {
+function charIsHex(char: string): boolean {
     return (
         (char >= '0' && char <= '9') || (char >= 'a' && char <= 'f') || (char >= 'A' && char <= 'F')
     );
 }
 
-function nextCharNotHex(initialString, initialLength, currentIndex) {
+function nextCharNotHex(
+    initialString: string,
+    initialLength: number,
+    currentIndex: number,
+): boolean {
     return !(currentIndex < initialLength - 1 && charIsHex(initialString[currentIndex + 1]));
 }
 
 // String utils
-export const JSON = 'json';
-export const YSON = 'yson';
+const JSON = 'json';
+const YSON = 'yson';
 
-export const EMPTY_STRING = '';
-export const WHITESPACE = ' ';
-export const NON_BREAKING_WHITESPACE = '\xa0';
-export const LINE_FEED = '\n';
+const EMPTY_STRING = '';
+const WHITESPACE = ' ';
+const NON_BREAKING_WHITESPACE = '\xa0';
+const LINE_FEED = '\n';
 
 // Taken from underscore.js _.escape
 const escapeMap = {
@@ -71,22 +112,22 @@ const unescapeMap = {
     '&#x27;': "'",
     '&#x60;': '`',
 };
-const createEscaper = function (map) {
-    const escaper = function (match) {
+const createEscaper = function (map: Record<string, string>) {
+    const escaper = function (match: string): string {
         return map[match];
     };
     const source = '(?:' + Object.keys(map).join('|') + ')';
     const testRegexp = RegExp(source);
     const replaceRegexp = RegExp(source, 'g');
-    return function (string) {
+    return function (string: string | null): string {
         string = string === null ? '' : String(string);
         return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
     };
 };
-export const escape = createEscaper(escapeMap);
-export const unescape = createEscaper(unescapeMap);
+const escape = createEscaper(escapeMap);
+const unescape = createEscaper(unescapeMap);
 
-export function normalizeUrl(url, settings) {
+function normalizeUrl(url: string, settings: FormatSettings): string {
     try {
         if (settings.normalizeUrl) {
             return settings.normalizeUrl(url);
@@ -98,7 +139,11 @@ export function normalizeUrl(url, settings) {
     }
 }
 
-function whitespaceNeedsHighlighting(initialString, initialLength, currentIndex) {
+function whitespaceNeedsHighlighting(
+    initialString: string,
+    initialLength: number,
+    currentIndex: number,
+): boolean {
     if (currentIndex === 0 || currentIndex === initialLength - 1) {
         // Whitespace at the beginning or end of string
         return true;
@@ -112,7 +157,11 @@ function whitespaceNeedsHighlighting(initialString, initialLength, currentIndex)
     return false;
 }
 
-function appendHighlightedCharacter(char, asHTML, previousCharHighlighted) {
+function appendHighlightedCharacter(
+    char: string,
+    asHTML: boolean,
+    previousCharHighlighted: boolean,
+): string {
     if (asHTML) {
         char = escape(char);
 
@@ -124,7 +173,7 @@ function appendHighlightedCharacter(char, asHTML, previousCharHighlighted) {
     return char;
 }
 
-function appendCharacter(char, asHTML, previousCharHighlighted) {
+function appendCharacter(char: string, asHTML: boolean, previousCharHighlighted: boolean): string {
     if (asHTML) {
         char = escape(char);
 
@@ -136,7 +185,7 @@ function appendCharacter(char, asHTML, previousCharHighlighted) {
     return char;
 }
 
-function appendDoubleQuote(asHTML, previousCharHighlighted) {
+function appendDoubleQuote(asHTML: boolean, previousCharHighlighted: boolean): string {
     let char = '"';
 
     if (asHTML) {
@@ -150,14 +199,14 @@ function appendDoubleQuote(asHTML, previousCharHighlighted) {
     return char;
 }
 
-export function escapeJSONString(settings, value) {
+function escapeJSONString(settings: FormatSettings, value: string): string {
     const initialString = value,
         initialLength = value.length,
-        asHTML = settings.asHTML;
+        asHTML = settings.asHTML ?? false;
     let escapedString = '',
-        currentChar,
-        currentCode,
-        escapedChar,
+        currentChar: string,
+        currentCode: number,
+        escapedChar: string,
         previousCharHighlighted = false;
 
     // Wrap in double quotes
@@ -175,10 +224,11 @@ export function escapeJSONString(settings, value) {
         } else if (currentChar === '\n' || currentChar === '\t') {
             if (settings.escapeWhitespace) {
                 // Escape control characters with simple escape sequences
-                escapedChar = {
+                const whitespaceEscapes = {
                     '\n': '\\n',
                     '\t': '\\t',
-                }[currentChar];
+                };
+                escapedChar = whitespaceEscapes[currentChar];
                 escapedString += appendHighlightedCharacter(
                     escapedChar,
                     asHTML,
@@ -191,11 +241,12 @@ export function escapeJSONString(settings, value) {
             }
         } else if (currentChar === '\b' || currentChar === '\f' || currentChar === '\r') {
             // Escape control characters with simple escape sequences
-            escapedChar = {
+            const controlEscapes = {
                 '\b': '\\b',
                 '\f': '\\f',
                 '\r': '\\r',
-            }[currentChar];
+            };
+            escapedChar = controlEscapes[currentChar];
             escapedString += appendHighlightedCharacter(
                 escapedChar,
                 asHTML,
@@ -241,10 +292,10 @@ export function escapeJSONString(settings, value) {
     return escapedString;
 }
 
-export function escapeYSONString(settings, value) {
+function escapeYSONString(settings: FormatSettings, value: string): string {
     const initialString = value,
         initialLength = value.length,
-        asHTML = settings.asHTML;
+        asHTML = settings.asHTML ?? false;
 
     let escapedString = '',
         currentChar,
@@ -266,9 +317,10 @@ export function escapeYSONString(settings, value) {
             previousCharHighlighted = false;
         } else if (currentChar === '\r') {
             // Escape control characters with simple escape sequences
-            escapedChar = {
+            const carriageEscape = {
                 '\r': '\\r',
-            }[currentChar];
+            };
+            escapedChar = carriageEscape[currentChar];
             escapedString += appendHighlightedCharacter(
                 escapedChar,
                 asHTML,
@@ -278,10 +330,11 @@ export function escapeYSONString(settings, value) {
         } else if (currentChar === '\n' || currentChar === '\t') {
             if (settings.escapeWhitespace) {
                 // Escape control characters with simple escape sequences
-                escapedChar = {
+                const whitespaceEscapes = {
                     '\n': '\\n',
                     '\t': '\\t',
-                }[currentChar];
+                };
+                escapedChar = whitespaceEscapes[currentChar];
                 escapedString += appendHighlightedCharacter(
                     escapedChar,
                     asHTML,
@@ -336,10 +389,10 @@ export function escapeYSONString(settings, value) {
     return escapedString;
 }
 
-export function escapeHTMLString(settings, value) {
+function escapeHTMLString(settings: FormatSettings, value: string): string {
     const initialString = value,
         initialLength = value.length,
-        asHTML = settings.asHTML;
+        asHTML = settings.asHTML ?? false;
     let escapedString = '',
         currentChar;
 
@@ -357,7 +410,7 @@ export function escapeHTMLString(settings, value) {
     return escapedString;
 }
 
-export function binaryToHex(settings, string) {
+function binaryToHex(settings: FormatSettings, string: string): string {
     return string
         .split(EMPTY_STRING)
         .map(function (char) {
@@ -372,32 +425,35 @@ export function binaryToHex(settings, string) {
         .join(settings.nonBreakingIndent ? NON_BREAKING_WHITESPACE : WHITESPACE);
 }
 
-export function escapeYSONBinaryString(settings, value) {
+function escapeYSONBinaryString(settings: FormatSettings, value: string): string {
     // String should be utf8-encoded
     return binaryToHex(settings, value);
 }
 
-export function escapeYQLBinaryString(settings, value) {
+function escapeYQLBinaryString(settings: FormatSettings, value: string): string {
     // TODO add possibility to fail gracefully in case data is corrupted
     return binaryToHex(settings, atob(value));
 }
 
 // Formatting utils
-export const YSON_ATTRIBUTES_START = '<';
-export const YSON_ATTRIBUTES_END = '>';
-export const OBJECT_START = '{';
-export const OBJECT_END = '}';
-export const ARRAY_START = '[';
-export const ARRAY_END = ']';
+const YSON_ATTRIBUTES_START = '<';
+const YSON_ATTRIBUTES_END = '>';
+const OBJECT_START = '{';
+const OBJECT_END = '}';
+const ARRAY_START = '[';
+const ARRAY_END = ']';
 
-export function getIndent(settings, level) {
+function getIndent(settings: FormatSettings, level: number): string {
     const space = settings.nonBreakingIndent ? NON_BREAKING_WHITESPACE : WHITESPACE;
-    return (settings.break ? LINE_FEED : EMPTY_STRING) + repeatChar(space, settings.indent * level);
+    return (
+        (settings.break ? LINE_FEED : EMPTY_STRING) +
+        repeatChar(space, (settings.indent || 0) * level)
+    );
 }
 
-export const JSON_EXPRESSION_TERMINATOR = ',';
+const JSON_EXPRESSION_TERMINATOR = ',';
 
-export function getExpressionTerminator(settings) {
+function getExpressionTerminator(settings: FormatSettings): string {
     if (settings.format === YSON) {
         return ';';
     } /*if (settings.format === JSON) */ else {
@@ -405,9 +461,9 @@ export function getExpressionTerminator(settings) {
     }
 }
 
-export const JSON_KEY_VALUE_SEPARATOR = ':' + WHITESPACE;
+const JSON_KEY_VALUE_SEPARATOR = ':' + WHITESPACE;
 
-export function getKeyValueSeparator(settings) {
+function getKeyValueSeparator(settings: FormatSettings): string {
     const space = settings.nonBreakingIndent ? NON_BREAKING_WHITESPACE : WHITESPACE;
     if (settings.format === YSON) {
         return space + '=' + space;
@@ -416,28 +472,30 @@ export function getKeyValueSeparator(settings) {
     }
 }
 
-export function getAttributesStart(settings) {
+function getAttributesStart(settings: FormatSettings): string {
     if (settings.format === JSON) {
         return OBJECT_START;
     } else if (settings.format === YSON) {
         return YSON_ATTRIBUTES_START;
     }
+    return '';
 }
 
-export function getAttributesEnd(settings) {
+function getAttributesEnd(settings: FormatSettings): string {
     if (settings.format === JSON) {
         return OBJECT_END + getExpressionTerminator(settings);
     } else if (settings.format === YSON) {
         return YSON_ATTRIBUTES_END;
     }
+    return '';
 }
 
-export function drawFullView(weight, settings) {
+function drawFullView(weight: number, settings: FormatSettings): boolean {
     return weight > 1 || (weight === 1 && !settings.compact);
 }
 
-export function drawCompactView(weight, settings) {
-    return weight === 1 && settings.compact;
+function drawCompactView(weight: number, settings: FormatSettings): boolean {
+    return weight === 1 && Boolean(settings.compact);
 }
 
 //from https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
@@ -460,19 +518,22 @@ const validCategories = new Set([
     'Z',
 ]);
 
-function validateCategory(category) {
+function validateCategory(category: string | undefined): boolean {
     if (!category) {
         return false;
     }
     return validCategories.has(category.toUpperCase());
 }
 
-export function wrapScalar(node, settings, formattedValue) {
+function wrapScalar(node: FormatNode, settings: FormatSettings, formattedValue: string): string {
     let className = /*'unipika-' + */ node.$type.replaceAll('.', '_');
     let title = '';
 
     if (validateCategory(node.$category)) {
-        className += WHITESPACE + 'pg_category_' + /*'unipika-' + */ node.$category.toLowerCase();
+        className +=
+            WHITESPACE +
+            'pg_category_' +
+            /*'unipika-' + */ (node.$category as string).toLowerCase();
     }
 
     if (node.$incomplete) {
@@ -506,7 +567,7 @@ export function wrapScalar(node, settings, formattedValue) {
         : formattedValue;
 }
 
-export function wrapComplex(node, settings, formattedValue) {
+function wrapComplex(node: FormatNode, settings: FormatSettings, formattedValue: string): string {
     let className = /*'unipika-' + */ '';
     let title = '';
 
@@ -537,7 +598,12 @@ export function wrapComplex(node, settings, formattedValue) {
         : formattedValue;
 }
 
-export function wrapOptional(node, settings, formattedValue, parentKey) {
+function wrapOptional(
+    node: FormatNode,
+    settings: FormatSettings,
+    formattedValue: string,
+    parentKey: symbol,
+): string {
     if (node.$value !== null) return formattedValue;
 
     let optionalLevels = node.$optional || 0;
@@ -570,25 +636,68 @@ export function wrapOptional(node, settings, formattedValue, parentKey) {
     return prefix + formattedValue + suffix;
 }
 
-export function unescapeKeyValue(value) {
+function unescapeKeyValue(value: unknown): unknown {
     // $$attributes is an escape for $attributes key (not a special key)
     /*
-            JSON presentation
-            {
-                "$$attributes": {
-                    "hello": "world"
-                },
-                "$$value": "foo"
-            }
+        JSON presentation
+        {
+            "$$attributes": {
+                "hello": "world"
+            },
+            "$$value": "foo"
+        }
 
-            YSON presentation
-            {
-                "$attributes" = {
-                    "hello" = "world";
-                };
-                "$value" = "foo";
+        YSON presentation
+        {
+            "$attributes" = {
+                "hello" = "world";
             };
-        */
+            "$value" = "foo";
+        };
+    */
 
     return typeof value === 'string' ? value.replace(/^\$\$/, '$') : value;
 }
+
+export {
+    parseSetting,
+    repeatChar,
+    escapeJSONString,
+    escapeYSONString,
+    escapeHTMLString,
+    escapeYSONBinaryString,
+    escapeYQLBinaryString,
+    unescapeKeyValue,
+    returnAsIs,
+    escape,
+    unescape,
+    normalizeUrl,
+    getAttributesEnd,
+    getAttributesStart,
+    getKeyValueSeparator,
+    getExpressionTerminator,
+    getIndent,
+    OBJECT_START,
+    OBJECT_END,
+    ARRAY_START,
+    ARRAY_END,
+    YSON_ATTRIBUTES_START,
+    YSON_ATTRIBUTES_END,
+    JSON_EXPRESSION_TERMINATOR,
+    JSON_KEY_VALUE_SEPARATOR,
+    EMPTY_STRING,
+    WHITESPACE,
+    NON_BREAKING_WHITESPACE,
+    LINE_FEED,
+    JSON,
+    YSON,
+    drawFullView,
+    drawCompactView,
+    wrapScalar,
+    wrapComplex,
+    wrapOptional,
+    // Exports for unit testing
+    toPaddedHex,
+    toPaddedOctal,
+    binaryToHex,
+};

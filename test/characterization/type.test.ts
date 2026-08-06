@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-import {type} from '../../lib/utils/type';
+const {type} = require('../../lib/utils/type');
 
 describe('characterization: utils/type', () => {
     describe('type()', () => {

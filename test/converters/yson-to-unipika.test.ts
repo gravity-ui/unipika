@@ -4,7 +4,7 @@ import * as unipika from '../..';
 
 describe('converters', function () {
     describe('yson-to-unipika', function () {
-        let _ysonToUnipika;
+        let _ysonToUnipika: (input: unknown) => unknown;
 
         beforeEach(function (done) {
             _ysonToUnipika = unipika.converters.yson;

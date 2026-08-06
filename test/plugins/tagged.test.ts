@@ -140,7 +140,7 @@ describe('plugins', function () {
         beforeEach(() => {
             settings = {
                 asHTML: true,
-                normalizeUrl: (url) => {
+                normalizeUrl: (url: string) => {
                     return 'https://h.yandex-team.ru/?' + encodeURIComponent(url);
                 },
             };
@@ -360,7 +360,7 @@ describe('plugins', function () {
         beforeEach(() => {
             settings = {
                 asHTML: false,
-                normalizeUrl: (url) => {
+                normalizeUrl: (url: string) => {
                     return 'https://h.yandex-team.ru/?' + encodeURIComponent(url);
                 },
             };
