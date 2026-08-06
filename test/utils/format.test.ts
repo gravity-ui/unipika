@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-const unipika = require('../..');
+import * as unipika from '../..';
 
 describe('utils', function () {
     describe('format', function () {
@@ -15,7 +15,7 @@ describe('utils', function () {
         });
 
         test('isObject', function () {
-            expect(_utils).toBeInstanceOf(Object);
+            expect(Object.prototype.toString.call(_utils)).toBe('[object Object]');
         });
 
         describe('API', function () {

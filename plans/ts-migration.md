@@ -127,6 +127,53 @@ Goal: drop the factory pattern, AMD/UMD/browser-global logic, and `say()`. Set u
 - [x] Verify CI pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) passes: `lint`, `typecheck`, `test` — all three verified locally (lint: 0 errors/91 pre-existing warnings; typecheck: exit 0; test: 545 passed).
 - **Commit boundary.**
 
+### Phase 1.1 — Convert CommonJS to ESM (import/export)
+**Status: [x] DONE** — all `lib/**/*.js` and `test/**/*.js`/`.test.ts` files converted from `require`/`module.exports` to `import`/`export`. 545 tests pass, lint passes (0 errors).
+
+Goal: convert the entire `lib/` directory and all test files from CommonJS (`require`/`module.exports`) to ESM (`import`/`export`). This is an intermediate step before the TS migration — the codebase stays in `.js` files (Babel transpiles ESM back to CJS for Jest via `babel-jest`), but the module syntax is now modern ESM. This makes the subsequent TS conversion (Phases 3-7) a pure syntax/type-annotation task, with no module-system changes needed.
+
+**Key decisions:**
+- **Named exports only** — no `export default` anywhere (consistent with the plan's "No default exports" rule). `lib/index.js` uses named exports (`export {format, formatFromYSON, ...}` + `export const converters` + `export const utils`).
+- **`import * as utils`** for namespace imports (e.g., `import * as utils from './format'`) — replaces `const utils = require('./utils/format')` which returned the whole `module.exports` object.
+- **`type.js` explicit `is*` methods** — replaced the IIFE with `generateMethod` loop with explicit `export function isString`, `export function isNumber`, etc. (following the pattern from commit `b64e999`). The `type.isString` etc. access pattern is preserved by attaching the `is*` functions to the `type` function.
+- **PluginFactory naming convention preserved** — `module.exports = function(_format) {...}` → `export function xxxPluginFactory(_format) {...}` (e.g., `booleanPluginFactory`, `yqlDatePluginFactory`, `listPluginFactory`).
+- **Re-export pattern** for `double.js`/`number.js`: `export {int64PluginFactory as doublePluginFactory} from './int64'`.
+- **Inline exports** — `lib/utils/format.js` and `lib/utils/yson.js` use `export` at each definition site (e.g., `export function parseSetting`, `export const JSON`) instead of a bottom `export { ... }` block. The `// Exports for unit testing` comment is preserved above `toPaddedHex`/`toPaddedOctal` and `binaryToHex`.
+- **`vendor/utf8.js` untouched** — left as CommonJS (user instruction). `lib/utils/utf8.js` imports it via `import utf8 from '../../vendor/utf8'` (Babel interop handles the CJS default export).
+- **`Object.assign` not used** — always returns an object even when it could be `undefined`; avoided in favor of explicit conditional logic.
+- **Recursive converter functions renamed** — `const convert = function(...)` with recursive self-calls became the exported function name (e.g., `rawToUnipika`, `ysonToUnipika`, `yqlToUnipika`).
+
+**Files changed:**
+- `jest.config.ts` — transform pattern `'\\.tsx?$'` → `'\\.[jt]sx?$'` to handle ESM in `.js` files via `babel-jest`.
+- `lib/index.js` — `require`/`module.exports` → `import`/`export` with named exports.
+- `lib/format.js` — IIFE removed, `import` for all converters/plugins/utils, `export function` for all format functions.
+- `lib/converters/*.js` (3 files) — IIFEs removed, `import`/`export function` for converters.
+- `lib/plugins/*.js` (30+ files) — `module.exports = function` → `export function xxxPluginFactory`.
+- `lib/utils/format.js` — IIFE removed, inline `export` at each definition site.
+- `lib/utils/type.js` — IIFE + `generateMethod` loop → explicit `is*` named exports.
+- `lib/utils/yson.js` — IIFE removed, inline `export` at each definition site.
+- `lib/utils/utf8.js` — IIFE removed, `import utf8 from '../../vendor/utf8'` + named `encode`/`decode` exports.
+- `lib/utils/list-fragment.js`, `lib/utils/map-fragment.js` — IIFEs removed, `import`/`export function`.
+- `test/utils.js` — IIFE with `module.exports` → named `export function toPlainText`/`toHTMLText`.
+- All `test/**/*.test.ts` (14 files) — `const unipika = require('../..')` → `import * as unipika from '../..'`.
+- `test/plugins/yql-date.test.ts` — `require('../../lib/plugins/yql-date')` → `import {yqlDatePluginFactory as date} from '../../lib/plugins/yql-date'` (and similar for datetime/timestamp).
+- `test/utils/format.test.ts` — `expect(_utils).toBeInstanceOf(Object)` → `expect(Object.prototype.toString.call(_utils)).toBe('[object Object]')` (Module Namespace Objects from `import * as` fail `instanceof Object` under Babel).
+
+**Not changed (intentionally):**
+- `vendor/utf8.js` — left as CommonJS (user instruction).
+- `babel.config.js`, `.prettierrc.js`, `gulpfile.js` — Node.js config files, stay CommonJS.
+- `example/*.js` — demo/playground files, not part of library or tests.
+
+- [x] Convert all `lib/**/*.js` from `require`/`module.exports` to `import`/`export`.
+- [x] Convert `test/utils.js` from IIFE/`module.exports` to named `export function`.
+- [x] Convert all `test/**/*.test.ts` `require()` calls to `import` statements.
+- [x] Update `jest.config.ts` transform pattern to handle ESM in `.js` files.
+- [x] Fix `test/utils/format.test.ts` `toBeInstanceOf(Object)` for Module Namespace Objects.
+- [x] Move `lib/utils/format.js` and `lib/utils/yson.js` exports inline to definition sites.
+- [x] Verify all 545 tests pass.
+- [x] Verify ESLint passes (0 errors, only pre-existing warnings).
+- **Commit boundary.**
+
 ### Phase 2 — Replace vendor/utf8.js with npm package
 **Status: [ ] NOT STARTED**
 
@@ -308,6 +355,7 @@ Goal: write a migration guide documenting all breaking changes for the new major
 |-------|-------------|--------|
 | 0 | Characterization tests | ✅ DONE (182 tests, 5 files in `test/characterization/`) |
 | 1 | JS refactor: drop factory, AMD/UMD, `say()`; set up `tsconfig.json` | ✅ DONE (545 tests, tsc --noEmit, lint all pass) |
+| 1.1 | Convert CommonJS to ESM (import/export) | ✅ DONE (545 tests, lint 0 errors) |
 | 2 | Replace vendor/utf8 with npm | NOT STARTED |
 | 3 | Utils → TS | NOT STARTED |
 | 4 | Converters → TS | NOT STARTED |

@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals';
 
-const unipika = require('../..');
+import * as unipika from '../..';
 
 const {format, formatRaw, converters} = unipika;
 

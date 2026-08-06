@@ -4,7 +4,7 @@ const config: Config = {
     testEnvironment: 'jsdom',
     verbose: false,
     transform: {
-        '\\.tsx?$': 'babel-jest',
+        '\\.[jt]sx?$': 'babel-jest',
     },
 };
 
