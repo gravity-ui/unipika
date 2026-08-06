@@ -3,7 +3,9 @@ import type {FormatNode, FormatSettings} from './format';
 
 type FormatFunction = (node: unknown, settings: FormatSettings, level: number) => string;
 
-export function mapFragmentFactory(_format: FormatFunction) {
+export function mapFragmentFactory(
+    _format: FormatFunction,
+): (value: Array<[FormatNode, unknown]>, settings: FormatSettings, level: number) => string {
     const SORTABLE_TYPES = {
         string: null,
         'yql.string': null,

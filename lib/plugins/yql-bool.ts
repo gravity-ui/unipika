@@ -1,1 +1,1 @@
-module.exports = require('./boolean');
+export {boolean as yqlBool} from './boolean';

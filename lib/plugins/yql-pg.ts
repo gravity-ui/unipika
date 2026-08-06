@@ -1,5 +1,7 @@
-module.exports = function (/*_format*/) {
-    function pg(node /*, settings, level*/) {
+import type {PluginFactory, PluginNode} from './types';
+
+export const yqlPg: PluginFactory = function (/*_format*/) {
+    function pg(node: PluginNode /*, settings, level*/): string {
         return String(node.$value);
     }
 

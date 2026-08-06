@@ -25,6 +25,13 @@ export type FormatNode = {
     [key: symbol]: FormatNode | undefined;
 };
 
+/**
+ * A scalar value that can be produced by a plugin or passed through the
+ * wrapping functions (`wrapScalar`/`wrapComplex`/`wrapOptional`). Includes
+ * `string` (the common case), `number`, `boolean`, and `null`.
+ */
+export type ScalarValue = string | number | boolean | null;
+
 function parseSetting(
     settings: FormatSettings | null | undefined,
     name: string,
@@ -525,7 +532,11 @@ function validateCategory(category: string | undefined): boolean {
     return validCategories.has(category.toUpperCase());
 }
 
-function wrapScalar(node: FormatNode, settings: FormatSettings, formattedValue: string): string {
+function wrapScalar(
+    node: FormatNode,
+    settings: FormatSettings,
+    formattedValue: ScalarValue,
+): ScalarValue {
     let className = /*'unipika-' + */ node.$type.replaceAll('.', '_');
     let title = '';
 
@@ -562,12 +573,16 @@ function wrapScalar(node: FormatNode, settings: FormatSettings, formattedValue: 
               ' class="' +
               className +
               '">' +
-              formattedValue +
+              String(formattedValue) +
               '</span>'
         : formattedValue;
 }
 
-function wrapComplex(node: FormatNode, settings: FormatSettings, formattedValue: string): string {
+function wrapComplex(
+    node: FormatNode,
+    settings: FormatSettings,
+    formattedValue: ScalarValue,
+): ScalarValue {
     let className = /*'unipika-' + */ '';
     let title = '';
 
@@ -593,7 +608,7 @@ function wrapComplex(node: FormatNode, settings: FormatSettings, formattedValue:
               ' class="' +
               className +
               '">' +
-              formattedValue +
+              String(formattedValue) +
               '</span>'
         : formattedValue;
 }
@@ -601,9 +616,9 @@ function wrapComplex(node: FormatNode, settings: FormatSettings, formattedValue:
 function wrapOptional(
     node: FormatNode,
     settings: FormatSettings,
-    formattedValue: string,
+    formattedValue: ScalarValue,
     parentKey: symbol,
-): string {
+): ScalarValue {
     if (node.$value !== null) return formattedValue;
 
     let optionalLevels = node.$optional || 0;
@@ -626,14 +641,14 @@ function wrapOptional(
             '<span class="optional">' +
             prefix +
             '</span>' +
-            formattedValue +
+            String(formattedValue) +
             '<span class="optional">' +
             suffix +
             '</span>'
         );
     }
 
-    return prefix + formattedValue + suffix;
+    return prefix + String(formattedValue) + suffix;
 }
 
 function unescapeKeyValue(value: unknown): unknown {

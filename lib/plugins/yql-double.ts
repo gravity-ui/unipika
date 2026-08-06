@@ -1,1 +1,1 @@
-module.exports = require('./int64');
+export {int64 as yqlDouble} from './int64';

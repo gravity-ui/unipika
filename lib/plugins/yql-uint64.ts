@@ -1,1 +1,1 @@
-module.exports = require('./uint64');
+export {uint64 as yqlUint64} from './uint64';

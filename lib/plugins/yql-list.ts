@@ -1,1 +1,1 @@
-module.exports = require('./list');
+export {list as yqlList} from './list';

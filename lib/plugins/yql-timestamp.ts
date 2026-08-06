@@ -1,17 +1,20 @@
-module.exports = function (/*_format*/) {
-    const dateConverter = require('./yql-date');
+import type {PluginFactory, PluginNode} from './types';
+import {yqlDate} from './yql-date';
+
+export const yqlTimestamp: PluginFactory = function (/*_format*/) {
+    const dateConverter = yqlDate((_node, _settings, _level) => '');
 
     const INVALID_MOCK = 'Invalid timestamp';
 
-    const isValid = (datetime) => {
+    const isValid = (datetime: string): boolean => {
         return /^[+-]?\d+-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{6}Z$/.test(datetime);
     };
 
-    function padMicroseconds(microseconds = Number()) {
+    function padMicroseconds(microseconds = BigInt(0)): string {
         return `${microseconds}`.padStart(3, '0');
     }
 
-    function getTimePart(microsedonds = BigInt()) {
+    function getTimePart(microsedonds = BigInt(0)): string {
         let microsecondsReminder = microsedonds % 1000n;
         const milliseconds = microsedonds / 1000n;
         const dateTime = new Date(Number(milliseconds));
@@ -29,7 +32,7 @@ module.exports = function (/*_format*/) {
         return dateTimeISO.split('T')[1];
     }
 
-    const getSeconds = (microseconds = BigInt(0)) => {
+    const getSeconds = (microseconds = BigInt(0)): number => {
         const MICROSECONDS_IN_SECOND = 1_000_000n;
 
         if (microseconds === 0n) return 0;
@@ -45,19 +48,19 @@ module.exports = function (/*_format*/) {
         return Number(seconds);
     };
 
-    function timestamp(node /*, settings, level*/) {
+    function timestamp(node: PluginNode /*, settings, level*/): string {
         try {
             const SECONDS_IN_DAY = 86_400;
 
-            const microseconds = BigInt(node.$value);
+            const microseconds = BigInt(node.$value as string);
 
             const seconds = getSeconds(microseconds);
 
             const days = Math.floor(seconds / SECONDS_IN_DAY);
 
-            const date = dateConverter()({$value: days});
+            const date = dateConverter({$type: 'yql.date', $value: days}, {}, 0);
 
-            const timestampISO = `${date.split('T')[0]}T${getTimePart(microseconds)}`;
+            const timestampISO = `${(date as string).split('T')[0]}T${getTimePart(microseconds)}`;
 
             return isValid(timestampISO) ? timestampISO : INVALID_MOCK;
         } catch (e) {

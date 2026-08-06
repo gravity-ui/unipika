@@ -1,1 +1,1 @@
-module.exports = require('./tagged');
+export {tagged as yqlTagged} from './tagged';

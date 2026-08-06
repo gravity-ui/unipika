@@ -1,5 +1,7 @@
-module.exports = function (/*_format*/) {
-    function int64(node, settings /*, level*/) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const int64: PluginFactory = function (/*_format*/) {
+    function int64(node: PluginNode, settings: PluginSettings /*, level*/) {
         let value = node.$value;
         if (typeof settings.customNumberFormatter === 'function') {
             value = settings.customNumberFormatter(node.$value, node.$type);

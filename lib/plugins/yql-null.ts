@@ -1,1 +1,1 @@
-module.exports = require('./null');
+export {nullPlugin as yqlNull} from './null';

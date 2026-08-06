@@ -1,10 +1,14 @@
-module.exports = function (_format) {
-    const utils = require('../utils/format');
-    const mapFragment = require('../utils/map-fragment').mapFragmentFactory(_format);
+import * as utils from '../utils/format';
+import {mapFragmentFactory} from '../utils/map-fragment';
 
-    function map(node, settings, level) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const map: PluginFactory = function (_format) {
+    const mapFragment = mapFragmentFactory(_format);
+
+    function map(node: PluginNode, settings: PluginSettings, level: number): string {
         let resultString = '';
-        const currentValue = node.$value;
+        const currentValue = node.$value as Array<[PluginNode, unknown]>;
         const numberOfKeys = currentValue.length;
 
         if (utils.drawFullView(numberOfKeys, settings)) {

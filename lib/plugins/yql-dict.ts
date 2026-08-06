@@ -1,1 +1,1 @@
-module.exports = require('./map');
+export {map as yqlDict} from './map';

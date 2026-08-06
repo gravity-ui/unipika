@@ -3,7 +3,9 @@ import type {FormatSettings} from './format';
 
 type FormatFunction = (node: unknown, settings: FormatSettings, level: number) => string;
 
-export function listFragmentFactory(_format: FormatFunction) {
+export function listFragmentFactory(
+    _format: FormatFunction,
+): (value: Array<unknown>, settings: FormatSettings, level: number) => string {
     function listFragment(value: Array<unknown>, settings: FormatSettings, level: number): string {
         const limitListLength = settings.limitListLength ?? 0;
         const isListOutOfLimit = limitListLength > 0 && value.length > limitListLength;

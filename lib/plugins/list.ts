@@ -1,10 +1,14 @@
-module.exports = function (_format) {
-    const utils = require('../utils/format');
-    const listFragment = require('../utils/list-fragment').listFragmentFactory(_format);
+import * as utils from '../utils/format';
+import {listFragmentFactory} from '../utils/list-fragment';
 
-    function list(node, settings, level) {
+import type {PluginFactory, PluginNode, PluginSettings} from './types';
+
+export const list: PluginFactory = function (_format) {
+    const listFragment = listFragmentFactory(_format);
+
+    function list(node: PluginNode, settings: PluginSettings, level: number): string {
         let resultString = '';
-        const currentValue = node.$value;
+        const currentValue = node.$value as Array<unknown>;
         const listLength = currentValue.length;
 
         if (utils.drawFullView(listLength, settings)) {
