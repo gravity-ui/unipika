@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.4](https://github.com/gravity-ui/unipika/compare/v5.6.3...v5.6.4) (2026-09-09)
+
+
+### Bug Fixes
+
+* **yql-to-unipika:** support uuid value encoded in base64 ([#67](https://github.com/gravity-ui/unipika/issues/67)) ([9a17275](https://github.com/gravity-ui/unipika/commit/9a1727565f9289047e52f893de20b4d2a081dbb4))
+
 ## [5.6.3](https://github.com/gravity-ui/unipika/compare/v5.6.2...v5.6.3) (2026-06-30)
 
 
