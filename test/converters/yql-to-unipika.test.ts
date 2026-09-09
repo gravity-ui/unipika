@@ -1086,6 +1086,35 @@ describe('converters', function () {
                 expect(atob(yson.$value)).toEqual("We're no strangers to love");
                 expect(atob(yson.$value).length).toEqual(26);
             });
+
+            test('uuid', function () {
+                const result = yqlToYson(['Some value', ['DataType', 'Uuid']]);
+                expect(result).toEqual({
+                    $type: 'yql.uuid',
+                    $value: 'Some value',
+                });
+            });
+
+            test('uuid, val as data', function () {
+                const result = yqlToYson([{val: 'Some value'}, ['DataType', 'Uuid']], {
+                    treatValAsData: true,
+                });
+                expect(result).toEqual({
+                    $type: 'yql.uuid',
+                    $value: 'Some value',
+                });
+            });
+
+            test('uuid, binary val as data', function () {
+                const result = yqlToYson([{val: 'Some value', b64: true}, ['DataType', 'Uuid']], {
+                    treatValAsData: true,
+                });
+                expect(result).toEqual({
+                    $type: 'yql.uuid',
+                    $value: 'Some value',
+                    $binary: true,
+                });
+            });
         });
     });
 });

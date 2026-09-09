@@ -641,6 +641,15 @@ describe('format', function () {
                     },
                 },
             );
+            io.set(
+                {$type: 'yql.uuid', $value: 'mbzuoAuc+E67bWu5vTgKEQ==', $binary: true},
+                {
+                    json: {
+                        plain: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
+                        html: '<span class="yql_uuid binary">a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11</span>',
+                    },
+                },
+            );
 
             io.set(
                 {$type: 'yql.interval', $value: 1, $optional: 2},
