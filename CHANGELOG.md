@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.5](https://github.com/gravity-ui/unipika/compare/v5.6.4...v5.6.5) (2026-09-23)
+
+
+### Bug Fixes
+
+* escape binary YQL strings in HTML output ([#69](https://github.com/gravity-ui/unipika/issues/69)) ([8f6c821](https://github.com/gravity-ui/unipika/commit/8f6c8211d3c530d23f1ef36580e3acd8376c4dc9))
+
 ## [5.6.4](https://github.com/gravity-ui/unipika/compare/v5.6.3...v5.6.4) (2026-09-09)
 
 
